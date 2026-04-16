@@ -1,6 +1,6 @@
 //
 //  MultipleCountdownWidgetEntryView.swift
-//  noma
+//  Countie
 //
 //  Created by Nabil Ridhwan on 25/6/25.
 //

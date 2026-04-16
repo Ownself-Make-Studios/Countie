@@ -1,9 +1,9 @@
-<img src=".screenshots/noma_icon_default.png" alt="Noma Logo" width="80"/>
+<img src=".screenshots/countie_icon_default.png" alt="Countie Logo" width="80"/>
 
-# Noma
+# Countie
 > Track life's milestones, one countdown at a time.
 
-Noma is an iOS countdown app built with SwiftUI. It lets you create custom countdowns, link countdowns to calendar events, and surface upcoming events through Home Screen and Lock Screen widgets.
+Countie is an iOS countdown app built with SwiftUI. It lets you create custom countdowns, link countdowns to calendar events, and surface upcoming events through Home Screen and Lock Screen widgets.
 
 <table>
 <thead>
@@ -55,11 +55,11 @@ Noma is an iOS countdown app built with SwiftUI. It lets you create custom count
 
 ## Project Structure
 ```text
-noma/                    Main iOS app
+Countie/                 Main iOS app
 CountdownWidget/         Single countdown widget extension
 MultipleCountdownWidget/ Multi-countdown widget extension
-nomaTests/               Unit tests
-nomaUITests/             UI tests
+CountieTests/            Unit tests
+CountieUITests/          UI tests
 ```
 
 ## Requirements
@@ -68,8 +68,8 @@ nomaUITests/             UI tests
 - Apple developer signing setup if you want to run widgets on device
 
 ## Running The Project
-1. Open `/Users/nabil/Documents/programming/noma/noma.xcodeproj` in Xcode.
-2. Select the `noma` scheme.
+1. Open `/Users/nabil/Documents/programming/noma/Countie.xcodeproj` in Xcode.
+2. Select the `Countie` scheme.
 3. Build and run on an iOS 18.1 simulator or device.
 4. Grant Calendar access if you want to create countdowns from calendar events.
 

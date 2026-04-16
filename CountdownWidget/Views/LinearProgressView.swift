@@ -1,6 +1,6 @@
 //
 //  LinearProgressView.swift
-//  noma
+//  Countie
 //
 //  From: https://stackoverflow.com/a/79056508
 //

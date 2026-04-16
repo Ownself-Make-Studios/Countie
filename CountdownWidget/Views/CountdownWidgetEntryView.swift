@@ -1,6 +1,6 @@
 //
 //  CountdownWidgetEntryView.swift
-//  noma
+//  Countie
 //
 //  Created by Nabil Ridhwan on 25/10/24.
 //
@@ -15,7 +15,7 @@ struct CountdownWidgetEntryView: View {
 
     var deeplinkURL: URL? {
         if let countdownItem = entry.countdownItem {
-            return URL(string: "noma://countdown/\(countdownItem.id.uuidString)")
+            return URL(string: "countie://countdown/\(countdownItem.id.uuidString)")
         }
         return nil
     }

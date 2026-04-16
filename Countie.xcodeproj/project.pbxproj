@@ -1,0 +1,1014 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BD47E7BA2CD276BC00937C31 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = BD47E7B92CD276B600937C31 /* README.md */; };
+		BD5B338A2F00000100C0FFEE /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = BD5B33892F00000100C0FFEE /* ConfettiSwiftUI */; };
+		BD9807F72CC796090033C727 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD9807F62CC796090033C727 /* WidgetKit.framework */; };
+		BD9807F92CC796090033C727 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD9807F82CC796090033C727 /* SwiftUI.framework */; };
+		BD98080A2CC7960B0033C727 /* CountdownWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BD9807F42CC796090033C727 /* CountdownWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BDAE70512E0BF10100099A3A /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD9807F62CC796090033C727 /* WidgetKit.framework */; };
+		BDAE70522E0BF10100099A3A /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD9807F82CC796090033C727 /* SwiftUI.framework */; };
+		BDAE705F2E0BF10200099A3A /* MultipleCountdownWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BDAE70502E0BF10100099A3A /* MultipleCountdownWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BD92FC222CC73FE700D3FC20 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BD92FC072CC73FE500D3FC20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BD92FC0E2CC73FE500D3FC20;
+			remoteInfo = Countie;
+		};
+		BD92FC2C2CC73FE700D3FC20 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BD92FC072CC73FE500D3FC20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BD92FC0E2CC73FE500D3FC20;
+			remoteInfo = Countie;
+		};
+		BD9808082CC7960B0033C727 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BD92FC072CC73FE500D3FC20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BD9807F32CC796090033C727;
+			remoteInfo = CountdownWidgetExtension;
+		};
+		BDAE705D2E0BF10200099A3A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BD92FC072CC73FE500D3FC20 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BDAE704F2E0BF10100099A3A;
+			remoteInfo = MultipleCountdownWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BD98080F2CC7960B0033C727 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BDAE705F2E0BF10200099A3A /* MultipleCountdownWidgetExtension.appex in Embed Foundation Extensions */,
+				BD98080A2CC7960B0033C727 /* CountdownWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		BD47E7B92CD276B600937C31 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		BD596E282E0032FA006E32EA /* FoundationModels.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FoundationModels.framework; path = System/Library/Frameworks/FoundationModels.framework; sourceTree = SDKROOT; };
+		BD6211F72CC9DAE30034DAB8 /* CountdownWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CountdownWidgetExtension.entitlements; sourceTree = "<group>"; };
+		BD92FC0F2CC73FE500D3FC20 /* Countie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Countie.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD92FC212CC73FE700D3FC20 /* CountieTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CountieTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD92FC2B2CC73FE700D3FC20 /* CountieUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CountieUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD9807F42CC796090033C727 /* CountdownWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CountdownWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BD9807F62CC796090033C727 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		BD9807F82CC796090033C727 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		BDAE70502E0BF10100099A3A /* MultipleCountdownWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MultipleCountdownWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		BDCF46DA2E0CEAC000A409C1 /* MultipleCountdownWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MultipleCountdownWidgetExtension.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		BD4C6B432CD5C79E00F4F03E /* Exceptions for "Countie" folder in "Countie" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = BD92FC0E2CC73FE500D3FC20 /* Countie */;
+		};
+		BD86E8572F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
+			);
+			target = BD92FC202CC73FE700D3FC20 /* CountieTests */;
+		};
+		BD86E8582F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
+			);
+			target = BD92FC2A2CC73FE700D3FC20 /* CountieUITests */;
+		};
+		BD98080B2CC7960B0033C727 /* Exceptions for "CountdownWidget" folder in "CountdownWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = BD9807F32CC796090033C727 /* CountdownWidgetExtension */;
+		};
+		BD9808112CC797B10033C727 /* Exceptions for "Countie" folder in "CountdownWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				CalendarAccessManager.swift,
+				Model/CountdownItem.swift,
+				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
+				Model/CountdownStore.swift,
+				Model/EmojiDominantColor.swift,
+				Model/ModalStore.swift,
+				Model/ModelContainer.swift,
+				Views/CircularEmojiView.swift,
+				Views/CircularProgressBar.swift,
+			);
+			target = BD9807F32CC796090033C727 /* CountdownWidgetExtension */;
+		};
+		BDAE70632E0BF10200099A3A /* Exceptions for "MultipleCountdownWidget" folder in "MultipleCountdownWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = BDAE704F2E0BF10100099A3A /* MultipleCountdownWidgetExtension */;
+		};
+		BDAE70652E0BF2F000099A3A /* Exceptions for "Countie" folder in "MultipleCountdownWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CalendarAccessManager.swift,
+				Model/CountdownItem.swift,
+				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
+				Model/CountdownStore.swift,
+				Model/ModalStore.swift,
+				Model/ModelContainer.swift,
+			);
+			target = BDAE704F2E0BF10100099A3A /* MultipleCountdownWidgetExtension */;
+		};
+		BDED7A4B2E42AF9A00FEEBCD /* Exceptions for "CountdownWidget" folder in "Countie" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Views/LinearProgressView.swift,
+			);
+			target = BD92FC0E2CC73FE500D3FC20 /* Countie */;
+		};
+		BDED7A4C2E42AF9A00FEEBCD /* Exceptions for "CountdownWidget" folder in "MultipleCountdownWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Views/LinearProgressView.swift,
+			);
+			target = BDAE704F2E0BF10100099A3A /* MultipleCountdownWidgetExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		BD92FC112CC73FE500D3FC20 /* Countie */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				BD4C6B432CD5C79E00F4F03E /* Exceptions for "Countie" folder in "Countie" target */,
+				BD86E8572F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieTests" target */,
+				BD86E8582F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieUITests" target */,
+				BD9808112CC797B10033C727 /* Exceptions for "Countie" folder in "CountdownWidgetExtension" target */,
+				BDAE70652E0BF2F000099A3A /* Exceptions for "Countie" folder in "MultipleCountdownWidgetExtension" target */,
+			);
+			path = Countie;
+			sourceTree = "<group>";
+		};
+		BD92FC242CC73FE700D3FC20 /* CountieTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CountieTests;
+			sourceTree = "<group>";
+		};
+		BD92FC2E2CC73FE700D3FC20 /* CountieUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CountieUITests;
+			sourceTree = "<group>";
+		};
+		BD9807FA2CC796090033C727 /* CountdownWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				BDED7A4B2E42AF9A00FEEBCD /* Exceptions for "CountdownWidget" folder in "Countie" target */,
+				BD98080B2CC7960B0033C727 /* Exceptions for "CountdownWidget" folder in "CountdownWidgetExtension" target */,
+				BDED7A4C2E42AF9A00FEEBCD /* Exceptions for "CountdownWidget" folder in "MultipleCountdownWidgetExtension" target */,
+			);
+			path = CountdownWidget;
+			sourceTree = "<group>";
+		};
+		BDAE70532E0BF10100099A3A /* MultipleCountdownWidget */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				BDAE70632E0BF10200099A3A /* Exceptions for "MultipleCountdownWidget" folder in "MultipleCountdownWidgetExtension" target */,
+			);
+			path = MultipleCountdownWidget;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BD92FC0C2CC73FE500D3FC20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD5B338A2F00000100C0FFEE /* ConfettiSwiftUI in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD92FC1E2CC73FE700D3FC20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD92FC282CC73FE700D3FC20 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD9807F12CC796090033C727 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD9807F92CC796090033C727 /* SwiftUI.framework in Frameworks */,
+				BD9807F72CC796090033C727 /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDAE704D2E0BF10100099A3A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BDAE70522E0BF10100099A3A /* SwiftUI.framework in Frameworks */,
+				BDAE70512E0BF10100099A3A /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BD92FC062CC73FE500D3FC20 = {
+			isa = PBXGroup;
+			children = (
+				BD47E7B92CD276B600937C31 /* README.md */,
+				BD92FC112CC73FE500D3FC20 /* Countie */,
+				BD92FC242CC73FE700D3FC20 /* CountieTests */,
+				BD92FC2E2CC73FE700D3FC20 /* CountieUITests */,
+				BD9807FA2CC796090033C727 /* CountdownWidget */,
+				BDAE70532E0BF10100099A3A /* MultipleCountdownWidget */,
+				BD9807F52CC796090033C727 /* Frameworks */,
+				BD92FC102CC73FE500D3FC20 /* Products */,
+				BDCF46DA2E0CEAC000A409C1 /* MultipleCountdownWidgetExtension.entitlements */,
+				BD6211F72CC9DAE30034DAB8 /* CountdownWidgetExtension.entitlements */,
+			);
+			sourceTree = "<group>";
+		};
+		BD92FC102CC73FE500D3FC20 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BD92FC0F2CC73FE500D3FC20 /* Countie.app */,
+				BD92FC212CC73FE700D3FC20 /* CountieTests.xctest */,
+				BD92FC2B2CC73FE700D3FC20 /* CountieUITests.xctest */,
+				BD9807F42CC796090033C727 /* CountdownWidgetExtension.appex */,
+				BDAE70502E0BF10100099A3A /* MultipleCountdownWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BD9807F52CC796090033C727 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BD596E282E0032FA006E32EA /* FoundationModels.framework */,
+				BD9807F62CC796090033C727 /* WidgetKit.framework */,
+				BD9807F82CC796090033C727 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BD92FC0E2CC73FE500D3FC20 /* Countie */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD92FC352CC73FE700D3FC20 /* Build configuration list for PBXNativeTarget "Countie" */;
+			buildPhases = (
+				BD92FC0B2CC73FE500D3FC20 /* Sources */,
+				BD92FC0C2CC73FE500D3FC20 /* Frameworks */,
+				BD92FC0D2CC73FE500D3FC20 /* Resources */,
+				BD98080F2CC7960B0033C727 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BD9808092CC7960B0033C727 /* PBXTargetDependency */,
+				BDAE705E2E0BF10200099A3A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BD92FC112CC73FE500D3FC20 /* Countie */,
+			);
+			name = Countie;
+			packageProductDependencies = (
+				BD5B33892F00000100C0FFEE /* ConfettiSwiftUI */,
+			);
+			productName = Countie;
+			productReference = BD92FC0F2CC73FE500D3FC20 /* Countie.app */;
+			productType = "com.apple.product-type.application";
+		};
+		BD92FC202CC73FE700D3FC20 /* CountieTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD92FC382CC73FE700D3FC20 /* Build configuration list for PBXNativeTarget "CountieTests" */;
+			buildPhases = (
+				BD92FC1D2CC73FE700D3FC20 /* Sources */,
+				BD92FC1E2CC73FE700D3FC20 /* Frameworks */,
+				BD92FC1F2CC73FE700D3FC20 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BD92FC232CC73FE700D3FC20 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BD92FC242CC73FE700D3FC20 /* CountieTests */,
+			);
+			name = CountieTests;
+			packageProductDependencies = (
+			);
+			productName = CountieTests;
+			productReference = BD92FC212CC73FE700D3FC20 /* CountieTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		BD92FC2A2CC73FE700D3FC20 /* CountieUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD92FC3B2CC73FE700D3FC20 /* Build configuration list for PBXNativeTarget "CountieUITests" */;
+			buildPhases = (
+				BD92FC272CC73FE700D3FC20 /* Sources */,
+				BD92FC282CC73FE700D3FC20 /* Frameworks */,
+				BD92FC292CC73FE700D3FC20 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BD92FC2D2CC73FE700D3FC20 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				BD92FC2E2CC73FE700D3FC20 /* CountieUITests */,
+			);
+			name = CountieUITests;
+			packageProductDependencies = (
+			);
+			productName = CountieUITests;
+			productReference = BD92FC2B2CC73FE700D3FC20 /* CountieUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		BD9807F32CC796090033C727 /* CountdownWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD98080C2CC7960B0033C727 /* Build configuration list for PBXNativeTarget "CountdownWidgetExtension" */;
+			buildPhases = (
+				BD9807F02CC796090033C727 /* Sources */,
+				BD9807F12CC796090033C727 /* Frameworks */,
+				BD9807F22CC796090033C727 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BD9807FA2CC796090033C727 /* CountdownWidget */,
+			);
+			name = CountdownWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = CountdownWidgetExtension;
+			productReference = BD9807F42CC796090033C727 /* CountdownWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		BDAE704F2E0BF10100099A3A /* MultipleCountdownWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BDAE70622E0BF10200099A3A /* Build configuration list for PBXNativeTarget "MultipleCountdownWidgetExtension" */;
+			buildPhases = (
+				BDAE704C2E0BF10100099A3A /* Sources */,
+				BDAE704D2E0BF10100099A3A /* Frameworks */,
+				BDAE704E2E0BF10100099A3A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				BDAE70532E0BF10100099A3A /* MultipleCountdownWidget */,
+			);
+			name = MultipleCountdownWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = MultipleCountdownWidgetExtension;
+			productReference = BDAE70502E0BF10100099A3A /* MultipleCountdownWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BD92FC072CC73FE500D3FC20 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
+				TargetAttributes = {
+					BD92FC0E2CC73FE500D3FC20 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					BD92FC202CC73FE700D3FC20 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = BD92FC0E2CC73FE500D3FC20;
+					};
+					BD92FC2A2CC73FE700D3FC20 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = BD92FC0E2CC73FE500D3FC20;
+					};
+					BD9807F32CC796090033C727 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					BDAE704F2E0BF10100099A3A = {
+						CreatedOnToolsVersion = 26.0;
+					};
+				};
+			};
+			buildConfigurationList = BD92FC0A2CC73FE500D3FC20 /* Build configuration list for PBXProject "Countie" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BD92FC062CC73FE500D3FC20;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				BD5B33882F00000100C0FFEE /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = BD92FC102CC73FE500D3FC20 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BD92FC0E2CC73FE500D3FC20 /* Countie */,
+				BD92FC202CC73FE700D3FC20 /* CountieTests */,
+				BD92FC2A2CC73FE700D3FC20 /* CountieUITests */,
+				BD9807F32CC796090033C727 /* CountdownWidgetExtension */,
+				BDAE704F2E0BF10100099A3A /* MultipleCountdownWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BD92FC0D2CC73FE500D3FC20 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD92FC1F2CC73FE700D3FC20 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD92FC292CC73FE700D3FC20 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD9807F22CC796090033C727 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD47E7BA2CD276BC00937C31 /* README.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDAE704E2E0BF10100099A3A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BD92FC0B2CC73FE500D3FC20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD92FC1D2CC73FE700D3FC20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD92FC272CC73FE700D3FC20 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BD9807F02CC796090033C727 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BDAE704C2E0BF10100099A3A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BD92FC232CC73FE700D3FC20 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BD92FC0E2CC73FE500D3FC20 /* Countie */;
+			targetProxy = BD92FC222CC73FE700D3FC20 /* PBXContainerItemProxy */;
+		};
+		BD92FC2D2CC73FE700D3FC20 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BD92FC0E2CC73FE500D3FC20 /* Countie */;
+			targetProxy = BD92FC2C2CC73FE700D3FC20 /* PBXContainerItemProxy */;
+		};
+		BD9808092CC7960B0033C727 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BD9807F32CC796090033C727 /* CountdownWidgetExtension */;
+			targetProxy = BD9808082CC7960B0033C727 /* PBXContainerItemProxy */;
+		};
+		BDAE705E2E0BF10200099A3A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BDAE704F2E0BF10100099A3A /* MultipleCountdownWidgetExtension */;
+			targetProxy = BDAE705D2E0BF10200099A3A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		BD92FC332CC73FE700D3FC20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = WB66W4QJ7C;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BD92FC342CC73FE700D3FC20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = WB66W4QJ7C;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BD92FC362CC73FE700D3FC20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Countie/Countie.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Countie/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Countie/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Countie uses your calendar to add countdowns from";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Countie uses your calendar to add countdowns from";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countie;
+				PRODUCT_NAME = Countie;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BD92FC372CC73FE700D3FC20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Countie/Countie.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Countie/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Countie/Info.plist;
+				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Countie uses your calendar to add countdowns from";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Countie uses your calendar to add countdowns from";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countie;
+				PRODUCT_NAME = Countie;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BD92FC392CC73FE700D3FC20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countieTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Countie.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Countie";
+			};
+			name = Debug;
+		};
+		BD92FC3A2CC73FE700D3FC20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countieTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Countie.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Countie";
+			};
+			name = Release;
+		};
+		BD92FC3C2CC73FE700D3FC20 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countieUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Countie;
+			};
+			name = Debug;
+		};
+		BD92FC3D2CC73FE700D3FC20 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countieUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Countie;
+			};
+			name = Release;
+		};
+		BD98080D2CC7960B0033C727 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CountdownWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CountdownWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CountdownWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countie.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BD98080E2CC7960B0033C727 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CountdownWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CountdownWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = CountdownWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countie.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		BDAE70602E0BF10200099A3A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MultipleCountdownWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MultipleCountdownWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MultipleCountdownWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countie.MultipleCountdownWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BDAE70612E0BF10200099A3A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = MultipleCountdownWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MultipleCountdownWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MultipleCountdownWidget;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nabilridhwan.countie.MultipleCountdownWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BD92FC0A2CC73FE500D3FC20 /* Build configuration list for PBXProject "Countie" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD92FC332CC73FE700D3FC20 /* Debug */,
+				BD92FC342CC73FE700D3FC20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BD92FC352CC73FE700D3FC20 /* Build configuration list for PBXNativeTarget "Countie" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD92FC362CC73FE700D3FC20 /* Debug */,
+				BD92FC372CC73FE700D3FC20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BD92FC382CC73FE700D3FC20 /* Build configuration list for PBXNativeTarget "CountieTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD92FC392CC73FE700D3FC20 /* Debug */,
+				BD92FC3A2CC73FE700D3FC20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BD92FC3B2CC73FE700D3FC20 /* Build configuration list for PBXNativeTarget "CountieUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD92FC3C2CC73FE700D3FC20 /* Debug */,
+				BD92FC3D2CC73FE700D3FC20 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BD98080C2CC7960B0033C727 /* Build configuration list for PBXNativeTarget "CountdownWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BD98080D2CC7960B0033C727 /* Debug */,
+				BD98080E2CC7960B0033C727 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BDAE70622E0BF10200099A3A /* Build configuration list for PBXNativeTarget "MultipleCountdownWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BDAE70602E0BF10200099A3A /* Debug */,
+				BDAE70612E0BF10200099A3A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BD5B33882F00000100C0FFEE /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BD5B33892F00000100C0FFEE /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BD5B33882F00000100C0FFEE /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = BD92FC072CC73FE500D3FC20 /* Project object */;
+}
