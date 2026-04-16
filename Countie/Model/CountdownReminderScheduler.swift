@@ -8,8 +8,44 @@ struct CountdownReminderNotificationRequest: Sendable {
     let title: String
 }
 
+enum NotificationPermissionStatus: Equatable {
+    case notDetermined
+    case authorized
+    case denied
+    case provisional
+    case ephemeral
+
+    var isAuthorized: Bool {
+        switch self {
+        case .authorized, .provisional, .ephemeral:
+            return true
+        case .notDetermined, .denied:
+            return false
+        }
+    }
+}
+
 enum CountdownReminderScheduler {
     static let notificationCategoryIdentifier = "countdown-reminder"
+
+    static func notificationPermissionStatus() async -> NotificationPermissionStatus {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        return NotificationPermissionStatus(settings.authorizationStatus)
+    }
+
+    static func requestNotificationPermission() async -> Bool {
+        let center = UNUserNotificationCenter.current()
+        let status = await notificationPermissionStatus()
+
+        switch status {
+        case .authorized, .provisional, .ephemeral:
+            return true
+        case .denied:
+            return false
+        case .notDetermined:
+            return (try? await center.requestAuthorization(options: [.alert, .badge, .sound])) ?? false
+        }
+    }
 
     static func snapshot(for countdown: CountdownItem) -> [CountdownReminderNotificationRequest] {
         countdown.reminderDrafts.map { draft in
@@ -31,19 +67,16 @@ enum CountdownReminderScheduler {
         await removeNotifications(for: countdownID)
 
         guard !reminders.isEmpty else { return }
-
         let center = UNUserNotificationCenter.current()
-        let settings = await center.notificationSettings()
 
-        switch settings.authorizationStatus {
+        let granted = await requestNotificationPermission()
+        guard granted else { return }
+
+        let status = await notificationPermissionStatus()
+        switch status {
         case .authorized, .provisional, .ephemeral:
             break
-        case .notDetermined:
-            let granted = (try? await center.requestAuthorization(options: [.alert, .badge, .sound])) ?? false
-            guard granted else { return }
-        case .denied:
-            return
-        @unknown default:
+        case .notDetermined, .denied:
             return
         }
 
@@ -150,14 +183,33 @@ extension UNUserNotificationCenter {
     }
 
     fileprivate func add(_ request: UNNotificationRequest) async throws {
-//        try await withCheckedThrowingContinuation { continuation in
-//            add(request) { error in
-//                if let error {
-//                    continuation.resume(throwing: error)
-//                } else {
-//                    continuation.resume()
-//                }
-//            }
-//        }
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+            add(request) { error in
+                if let error {
+                    continuation.resume(throwing: error)
+                } else {
+                    continuation.resume(returning: ())
+                }
+            }
+        }
+    }
+}
+
+private extension NotificationPermissionStatus {
+    init(_ authorizationStatus: UNAuthorizationStatus) {
+        switch authorizationStatus {
+        case .notDetermined:
+            self = .notDetermined
+        case .denied:
+            self = .denied
+        case .authorized:
+            self = .authorized
+        case .provisional:
+            self = .provisional
+        case .ephemeral:
+            self = .ephemeral
+        @unknown default:
+            self = .denied
+        }
     }
 }

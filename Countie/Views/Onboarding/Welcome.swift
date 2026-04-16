@@ -9,21 +9,22 @@ import SwiftUI
 
 struct Welcome: View {
     var body: some View {
-        
-        VStack(alignment: .center, spacing: 8){
-            
-            Image(
-                systemName: "timer.circle"
-            )
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 100, height: 100)
-            
-            VStack {
-                Text("Welcome to Countie")
-                    .font(.title)
+        VStack(alignment: .center, spacing: 20) {
+            Image("OnboardingLogo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 108, height: 108)
+                .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+                .shadow(color: .black.opacity(0.12), radius: 16, y: 6)
+
+            VStack(spacing: 12) {
+                Text("Countie")
+                    .font(.largeTitle)
                     .bold()
-                Text("Track Life’s Milestones, One Countdown at a Time")
+                Text("Good things take time.")
+                    .foregroundStyle(.secondary)
+                Text("We'll keep it track for you.")
+                    .foregroundStyle(.secondary)
             }
         }
         .multilineTextAlignment(.center)

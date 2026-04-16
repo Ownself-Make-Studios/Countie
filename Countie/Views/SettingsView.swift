@@ -17,9 +17,9 @@ enum ChangeCountdownWhenCalendarEventChangedOption: String, CaseIterable, Identi
 }
 
 struct SettingsView: View {
-    
     @EnvironmentObject var store: CountdownStore
     @State private var deletedCountdowns: [CountdownItem] = []
+    @State private var showOnboarding = false
     
     @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @AppStorage("showProgress") private var showProgress: Bool = true
@@ -95,6 +95,14 @@ struct SettingsView: View {
 //                    CountdownListView(countdowns: deletedCountdowns)
 //                        
 //                }
+
+                Section(header: Text("About Countie")) {
+                    Button {
+                        showOnboarding = true
+                    } label: {
+                        Label("View Onboarding", systemImage: "sparkles.rectangle.stack")
+                    }
+                }
                 
                 Section(header: Text("Support & Feedback")) {
                     Link(destination: URL(string: "https://github.com/your-repo/issues/new?template=bug_report.md")!) {
@@ -114,6 +122,11 @@ struct SettingsView: View {
             // Load deleted countdowns from the store
             if let countdowns = store.fetchDeletedCountdowns(){
                 deletedCountdowns = countdowns
+            }
+        }
+        .fullScreenCover(isPresented: $showOnboarding) {
+            OnboardingFlowView(mode: .settings) {
+                showOnboarding = false
             }
         }
     }

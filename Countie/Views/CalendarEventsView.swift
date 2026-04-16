@@ -81,10 +81,13 @@ struct CalendarEventsView: View {
         }
         .searchable(text: $searchText, placement: .toolbar, prompt: "Search events")
         .task {
-            // Request permission for calendar access
-            CalendarAccessManager.requestPermission()
-            
-            // Fetch calendars and events on appear
+            let granted = await CalendarAccessManager.requestPermission()
+            guard granted else {
+                calendars = []
+                events = []
+                return
+            }
+
             calendars = CalendarAccessManager.store.calendars(for: .event)
             let predicate = CalendarAccessManager.store.predicateForEvents(withStart: Date.now, end: Date.distantFuture, calendars: nil)
             events = CalendarAccessManager.store.events(matching: predicate)
