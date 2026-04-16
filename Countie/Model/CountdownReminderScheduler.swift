@@ -60,7 +60,6 @@ enum CountdownReminderScheduler {
     static func syncNotifications(
         countdownID: UUID,
         countdownName: String,
-        countdownEmoji: String?,
         eventDate: Date,
         reminders: [CountdownReminderNotificationRequest]
     ) async {
@@ -80,14 +79,12 @@ enum CountdownReminderScheduler {
             return
         }
 
-        let contentPrefix = (countdownEmoji?.isEmpty == false ? "\(countdownEmoji!) " : "")
-
         for reminder in reminders {
             let triggerDate = eventDate.addingTimeInterval(TimeInterval(-reminder.secondsBeforeEvent))
             guard triggerDate > .now else { continue }
 
             let content = UNMutableNotificationContent()
-            content.title = "\(contentPrefix)\(countdownName)"
+            content.title = countdownName
             content.body = reminder.secondsBeforeEvent == 0
                 ? "Your countdown has reached its event time."
                 : "Reminder: \(reminder.title)."
@@ -113,7 +110,6 @@ enum CountdownReminderScheduler {
         await syncNotifications(
             countdownID: countdown.id,
             countdownName: countdown.name,
-            countdownEmoji: countdown.emoji,
             eventDate: countdown.date,
             reminders: snapshot(for: countdown)
         )
@@ -124,7 +120,6 @@ enum CountdownReminderScheduler {
             (
                 id: $0.id,
                 name: $0.name,
-                emoji: $0.emoji,
                 date: $0.date,
                 reminders: snapshot(for: $0)
             )
@@ -134,7 +129,6 @@ enum CountdownReminderScheduler {
             await syncNotifications(
                 countdownID: countdown.id,
                 countdownName: countdown.name,
-                countdownEmoji: countdown.emoji,
                 eventDate: countdown.date,
                 reminders: countdown.reminders
             )

@@ -21,18 +21,47 @@ class CountdownStore: ObservableObject {
 
     private var context: ModelContext
 
+    private func normalizeAppearanceForAllCountdowns() {
+        let descriptor = FetchDescriptor<CountdownItem>()
+        guard let items = try? context.fetch(descriptor) else { return }
+
+        let didChange = items.reduce(false) { partialResult, item in
+            item.normalizeAppearance() || partialResult
+        }
+
+        if didChange {
+            try? context.save()
+        }
+    }
+
     func syncCountdownsWithEvents() {
         var changedCountdowns: [CountdownItem] = []
         var deletedCountdownIDs: [UUID] = []
 
         if let countdowns = self.fetchCalendarLinkedCountdowns() {
             for countdown in countdowns {
-                if let eventIdentifier = countdown.calendarEventIdentifier,
-                   let event = self.eventStore.event(withIdentifier: eventIdentifier) {
+                if let event = CalendarAccessManager.resolveEvent(for: countdown) {
                     // Update countdown date to match event's start date
                     if countdown.date != event.startDate {
                         countdown.date = event.startDate
                         changedCountdowns.append(countdown)
+                    }
+
+                    let linkDetails = CalendarEventLinkDetails(event: event)
+                    if countdown.calendarEventIdentifier != linkDetails.eventIdentifier {
+                        countdown.calendarEventIdentifier = linkDetails.eventIdentifier
+                        if !changedCountdowns.contains(where: { $0.id == countdown.id }) {
+                            changedCountdowns.append(countdown)
+                        }
+                    }
+                    if countdown.calendarSeriesIdentifier != linkDetails.seriesIdentifier {
+                        countdown.calendarSeriesIdentifier = linkDetails.seriesIdentifier
+                    }
+                    if countdown.calendarOccurrenceDate != linkDetails.occurrenceDate {
+                        countdown.calendarOccurrenceDate = linkDetails.occurrenceDate
+                    }
+                    if countdown.calendarRecurrenceImportScope != linkDetails.importScope {
+                        countdown.calendarRecurrenceImportScope = linkDetails.importScope
                     }
                 } else {
                     // Event was deleted or not found, mark countdown as deleted
@@ -49,7 +78,6 @@ class CountdownStore: ObservableObject {
                 (
                     id: $0.id,
                     name: $0.name,
-                    emoji: $0.emoji,
                     date: $0.date,
                     reminders: CountdownReminderScheduler.snapshot(for: $0)
                 )
@@ -64,7 +92,6 @@ class CountdownStore: ObservableObject {
                     await CountdownReminderScheduler.syncNotifications(
                         countdownID: countdown.id,
                         countdownName: countdown.name,
-                        countdownEmoji: countdown.emoji,
                         eventDate: countdown.date,
                         reminders: countdown.reminders
                     )
@@ -75,6 +102,7 @@ class CountdownStore: ObservableObject {
 
     init(context: ModelContext) {
         self.context = context
+        normalizeAppearanceForAllCountdowns()
         fetchCountdowns()
         syncCountdownsWithEvents() // Sync at launch
         let countdownSnapshots = self.countdowns
@@ -83,7 +111,6 @@ class CountdownStore: ObservableObject {
                 (
                     id: $0.id,
                     name: $0.name,
-                    emoji: $0.emoji,
                     date: $0.date,
                     reminders: CountdownReminderScheduler.snapshot(for: $0)
                 )
@@ -93,7 +120,6 @@ class CountdownStore: ObservableObject {
                 await CountdownReminderScheduler.syncNotifications(
                     countdownID: countdown.id,
                     countdownName: countdown.name,
-                    countdownEmoji: countdown.emoji,
                     eventDate: countdown.date,
                     reminders: countdown.reminders
                 )
@@ -122,7 +148,8 @@ class CountdownStore: ObservableObject {
         let currentDate = Date()
         let descriptor = FetchDescriptor<CountdownItem>(
             predicate: #Predicate<CountdownItem> {
-                $0.isDeleted == false && $0.calendarEventIdentifier != nil
+                $0.isDeleted == false
+                    && ($0.calendarEventIdentifier != nil || $0.calendarOccurrenceDate != nil)
                     && $0.date >= currentDate
             },
             sortBy: [
@@ -149,6 +176,12 @@ class CountdownStore: ObservableObject {
         let fetchedItems = try? context.fetch(descriptor)
 
         countdowns = fetchedItems ?? []
+        let didNormalize = countdowns.reduce(false) { partialResult, item in
+            item.normalizeAppearance() || partialResult
+        }
+        if didNormalize {
+            try? context.save()
+        }
         upcomingCountdowns = countdowns.filter { $0.date >= Date() }
         passedCountdowns = countdowns.filter { $0.date < Date() }
 

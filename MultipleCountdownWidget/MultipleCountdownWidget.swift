@@ -14,10 +14,10 @@ struct Provider: AppIntentTimelineProvider {
         SimpleEntry(
             date: Date(),
             countdowns: [
-                .init(emoji: "🎉", name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3)),
-                .init(emoji: "🎂", name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5)),
-                .init(emoji: "🎈", name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7)),
-                .init(emoji: "🎊", name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10))
+                .init(name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", colorNameRaw: CountdownEventColor.blue.rawValue),
+                .init(name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", colorNameRaw: CountdownEventColor.pink.rawValue),
+                .init(name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", colorNameRaw: CountdownEventColor.orange.rawValue),
+                .init(name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", colorNameRaw: CountdownEventColor.purple.rawValue)
                 
             ]
         )
@@ -27,10 +27,10 @@ struct Provider: AppIntentTimelineProvider {
         SimpleEntry(
             date: Date(),
             countdowns: [
-                .init(emoji: "🎉", name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3)),
-                .init(emoji: "🎂", name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5)),
-                .init(emoji: "🎈", name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7)),
-                .init(emoji: "🎊", name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10))
+                .init(name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", colorNameRaw: CountdownEventColor.blue.rawValue),
+                .init(name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", colorNameRaw: CountdownEventColor.pink.rawValue),
+                .init(name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", colorNameRaw: CountdownEventColor.orange.rawValue),
+                .init(name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", colorNameRaw: CountdownEventColor.purple.rawValue)
             ]
         )
     }
@@ -131,10 +131,10 @@ struct MultipleCountdownWidget: Widget {
     SimpleEntry(
         date:.now,
         countdowns: [
-            .init(emoji: "🎉", name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3)),
-            .init(emoji: "🎂", name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5)),
-            .init(emoji: "🎈", name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7)),
-            .init(emoji: "🎊", name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10))
+            .init(name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", colorNameRaw: CountdownEventColor.blue.rawValue),
+            .init(name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", colorNameRaw: CountdownEventColor.pink.rawValue),
+            .init(name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", colorNameRaw: CountdownEventColor.orange.rawValue),
+            .init(name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", colorNameRaw: CountdownEventColor.purple.rawValue)
         ]
     )
 }

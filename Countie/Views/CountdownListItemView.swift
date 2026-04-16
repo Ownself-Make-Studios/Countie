@@ -28,10 +28,11 @@ struct CountdownListItemView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
 
-            HStack {
+            HStack(spacing: 10) {
 
                 CircularEmojiView(
-                    emoji: item.emoji ?? "",
+                    iconName: item.resolvedIconName,
+                    tint: item.eventTintColor,
                     progress: Float(item.progress),
                     showProgress: showProgress
                 )
@@ -46,24 +47,6 @@ struct CountdownListItemView: View {
                     Text(item.formattedDateString)
                         .font(.caption)
                         .opacity(0.5)
-
-                    //                    showProgress
-                    //                        ? (HStack(spacing: 6) {
-                    //
-                    //                            LinearProgressView(
-                    //                                value: item.progress,
-                    //                                shape: Capsule()
-                    //                            )
-                    //                            .tint(Color(vibrantDominantColorOf: item.emoji ?? "") ?? .gray.opacity(0.3))
-                    //                            .frame(height: 4)
-                    //
-                    //                            Text("\(item.progressString)%")
-                    //                                .font(.caption2)
-                    //                                .opacity(0.4)
-                    //
-                    //                        }
-                    //                        .padding(.top, 4)) : nil
-
                 }
 
                 Spacer()

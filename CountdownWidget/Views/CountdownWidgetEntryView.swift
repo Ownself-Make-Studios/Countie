@@ -77,7 +77,8 @@ struct CountdownWidgetSmallView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
                 CircularEmojiView(
-                    emoji: countdownItem.emoji ?? "",
+                    iconName: countdownItem.resolvedIconName,
+                    tint: countdownItem.eventTintColor,
                     progress: showProgress ? Float(countdownItem.progress) : 0,
                     showProgress: showProgress,
                     width: 34
@@ -128,11 +129,7 @@ struct CountdownWidgetMediumView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if let emoji = countdownItem.emoji, !emoji.isEmpty {
-                Text(emoji)
-                    .font(.title)
-                    .frame(height: 44)
-            }
+            widgetIcon
             Text(countdownItem.name)
                 .font(.headline)
                 .bold()
@@ -155,7 +152,7 @@ struct CountdownWidgetMediumView: View {
                     )
                     .tint(
                         LinearGradient(
-                            colors: [.purple, .blue],
+                            colors: [countdownItem.eventTintColor.opacity(0.7), countdownItem.eventTintColor],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
@@ -179,11 +176,7 @@ struct CountdownWidgetLargeView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            if let emoji = countdownItem.emoji, !emoji.isEmpty {
-                Text(emoji)
-                    .font(.title)
-                    .frame(height: 44)
-            }
+            widgetIcon
             Text(countdownItem.name)
                 .font(.headline)
                 .bold()
@@ -206,7 +199,7 @@ struct CountdownWidgetLargeView: View {
                     )
                     .tint(
                         LinearGradient(
-                            colors: [.purple, .blue],
+                            colors: [countdownItem.eventTintColor.opacity(0.7), countdownItem.eventTintColor],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
@@ -243,11 +236,12 @@ struct CountdownWidgetAccessoryRectangularView: View {
         HStack {
             HStack {
                 CircularEmojiView(
-                    emoji: countdownItem.emoji ?? "",
+                    iconName: countdownItem.resolvedIconName,
+                    tint: countdownItem.eventTintColor,
                     progress: showProgress ? Float(countdownItem.progress) : 0,
                     showProgress: showProgress,
                     width: 28,
-                    emojiSize: 14
+                    iconSize: 14
                     
                 )
             }
@@ -290,7 +284,9 @@ struct CountdownWidgetAccessoryInlineView: View {
 
     var body: some View {
         HStack {
-            Text("\(countdownItem.emoji ?? "") \(timeRemainingWidgetString)")
+            Text(Image(systemName: countdownItem.resolvedIconName))
+                .foregroundStyle(countdownItem.eventTintColor)
+            Text(timeRemainingWidgetString)
                 .font(.body)
         }
     }
@@ -314,9 +310,28 @@ struct CountdownWidgetAccessoryCircularView: View {
             Gauge(value: countdownItem.progress) {
                 Text(timeRemainingWidgetString)
             } currentValueLabel: {
-                Text(countdownItem.emoji ?? "")
+                Image(systemName: countdownItem.resolvedIconName)
+                    .foregroundStyle(countdownItem.eventTintColor)
             }
             .gaugeStyle(.accessoryCircular)
         }
+    }
+}
+
+private extension CountdownWidgetMediumView {
+    var widgetIcon: some View {
+        Image(systemName: countdownItem.resolvedIconName)
+            .font(.title2.weight(.semibold))
+            .foregroundStyle(countdownItem.eventTintColor)
+            .frame(height: 44)
+    }
+}
+
+private extension CountdownWidgetLargeView {
+    var widgetIcon: some View {
+        Image(systemName: countdownItem.resolvedIconName)
+            .font(.title2.weight(.semibold))
+            .foregroundStyle(countdownItem.eventTintColor)
+            .frame(height: 44)
     }
 }

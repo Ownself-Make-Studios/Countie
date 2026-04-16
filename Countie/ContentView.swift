@@ -143,7 +143,7 @@ struct ContentView: View {
             .interactiveDismissDisabled()
         }
         .sheet(isPresented: $showCalendarModal) {
-            NavigationView {
+            NavigationStack {
                 CalendarEventsView(
                     onSelectEvent: { _ in
                         showAddModal = false
@@ -160,7 +160,6 @@ struct ContentView: View {
 
                 }
             }
-            .navigationTitle("Add from Calendar")
         }
         .sheet(item: $modalStore.isSelectedCountdown) { countdown in
             NavigationView {

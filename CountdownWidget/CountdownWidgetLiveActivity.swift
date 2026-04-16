@@ -12,7 +12,7 @@ import SwiftUI
 struct CountdownWidgetAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         // Dynamic stateful properties about your activity go here!
-        var emoji: String
+        var iconName: String
     }
 
     // Fixed non-changing properties about your activity go here!
@@ -24,7 +24,7 @@ struct CountdownWidgetLiveActivity: Widget {
         ActivityConfiguration(for: CountdownWidgetAttributes.self) { context in
             // Lock screen/banner UI goes here
             VStack {
-                Text("Hello \(context.state.emoji)")
+                Label("Hello", systemImage: context.state.iconName)
             }
             .activityBackgroundTint(Color.cyan)
             .activitySystemActionForegroundColor(Color.black)
@@ -40,15 +40,15 @@ struct CountdownWidgetLiveActivity: Widget {
                     Text("Trailing")
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
+                    Label("Bottom", systemImage: context.state.iconName)
                     // more content
                 }
             } compactLeading: {
                 Text("L")
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                Image(systemName: context.state.iconName)
             } minimal: {
-                Text(context.state.emoji)
+                Image(systemName: context.state.iconName)
             }
             .widgetURL(URL(string: "http://www.apple.com"))
             .keylineTint(Color.red)
@@ -64,11 +64,11 @@ extension CountdownWidgetAttributes {
 
 extension CountdownWidgetAttributes.ContentState {
     fileprivate static var smiley: CountdownWidgetAttributes.ContentState {
-        CountdownWidgetAttributes.ContentState(emoji: "😀")
+        CountdownWidgetAttributes.ContentState(iconName: "sparkles")
      }
      
      fileprivate static var starEyes: CountdownWidgetAttributes.ContentState {
-         CountdownWidgetAttributes.ContentState(emoji: "🤩")
+         CountdownWidgetAttributes.ContentState(iconName: "party.popper.fill")
      }
 }
 

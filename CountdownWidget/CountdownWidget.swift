@@ -11,7 +11,13 @@ import SwiftData
 
 struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
-        let countdownItem: CountdownItem = .init(emoji: "🎉", name: "Welcome to Countie!", includeTime: false, date: .now.addingTimeInterval(60 * 60 * 24 * 3))
+        let countdownItem: CountdownItem = .init(
+            name: "Welcome to Countie!",
+            includeTime: false,
+            date: .now.addingTimeInterval(60 * 60 * 24 * 3),
+            iconName: "sparkles",
+            colorNameRaw: CountdownEventColor.blue.rawValue
+        )
         
         countdownItem.countSince = Date.now.addingTimeInterval(60 * 60 * 24 * 2) // 2 days ago
         
@@ -27,7 +33,13 @@ struct Provider: AppIntentTimelineProvider {
         var countdownItem: CountdownItem? = await getLatestActiveCountdown()
         
         if countdownItem == nil {
-            countdownItem = .init(emoji: "🎉", name: "Welcome to Countie!", includeTime: false, date: .now.addingTimeInterval(60 * 60 * 24 * 3))
+            countdownItem = .init(
+                name: "Welcome to Countie!",
+                includeTime: false,
+                date: .now.addingTimeInterval(60 * 60 * 24 * 3),
+                iconName: "sparkles",
+                colorNameRaw: CountdownEventColor.blue.rawValue
+            )
         }
         
         return SimpleEntry(

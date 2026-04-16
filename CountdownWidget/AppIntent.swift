@@ -16,15 +16,11 @@ struct CountdownSelection: AppEntity, Identifiable, Hashable {
     let id: String
     let name: String
     let date: Date
-    let emoji: String?
     
     // What shows up when the menu is displayed
     var displayRepresentation: DisplayRepresentation {
-        // Show emoji if available, otherwise just show the name
-        let displayName = (emoji?.isEmpty == false ? (emoji! + " ") : "") + name
-        
         return DisplayRepresentation(
-            title: .init(stringLiteral: displayName),
+            title: .init(stringLiteral: name),
             subtitle: .init(stringLiteral: date.formatted())
         )
     }
@@ -33,7 +29,6 @@ struct CountdownSelection: AppEntity, Identifiable, Hashable {
         self.id = item.id.uuidString
         self.name = item.name
         self.date = item.date
-        self.emoji = item.emoji
     }
 }
 

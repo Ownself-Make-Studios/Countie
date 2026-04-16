@@ -117,7 +117,6 @@
 				Model/CountdownReminder.swift,
 				Model/CountdownReminderScheduler.swift,
 				Model/CountdownStore.swift,
-				Model/EmojiDominantColor.swift,
 				Model/ModalStore.swift,
 				Model/ModelContainer.swift,
 				Views/CircularEmojiView.swift,

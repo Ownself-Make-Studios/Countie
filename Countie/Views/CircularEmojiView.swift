@@ -7,8 +7,9 @@
 
 import SwiftUI
 
-struct CircularEmojiView: View {
-    var emoji: String = "🎉"  // Default emoji
+struct CircularEventIconView: View {
+    var iconName: String = CountdownEventIcon.default
+    var tint: Color = CountdownEventColor.blue.color
     var progress: Float = 0.8  // Default progress value
     var showProgress: Bool = true
 
@@ -16,23 +17,21 @@ struct CircularEmojiView: View {
     var brightness: Double = 0.3
     var lineWidth: CGFloat = 3.0
     var gap: CGFloat = 10.0
-    var emojiSize: CGFloat = 18.0
+    var iconSize: CGFloat = 18.0
 
     var body: some View {
         Circle()
             .frame(width: CGFloat(width))
-            .foregroundStyle(
-                Color(vibrantDominantColorOf: emoji) ?? .gray.opacity(0.3)
-            )
+            .foregroundStyle(tint.opacity(0.16))
             .overlay {
-                Text("\(emoji)")
-                    .font(.system(size: emojiSize))
+                Image(systemName: iconName)
+                    .font(.system(size: iconSize, weight: .semibold))
+                    .foregroundStyle(tint)
 
                 if showProgress {
                     CircularProgressBar(
                         progress: progress,
-                        color: Color(vibrantDominantColorOf: emoji)
-                            ?? .gray.opacity(0.8),
+                        color: tint,
                         lineWidth: lineWidth
                     )
                     .frame(
@@ -46,6 +45,8 @@ struct CircularEmojiView: View {
     }
 }
 
+typealias CircularEmojiView = CircularEventIconView
+
 #Preview(traits: .sizeThatFitsLayout) {
-    CircularEmojiView(showProgress: true)
+    CircularEventIconView(showProgress: true)
 }

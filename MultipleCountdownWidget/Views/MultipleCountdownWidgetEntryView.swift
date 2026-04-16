@@ -37,7 +37,11 @@ struct MultipleCountdownWidgetEntryView : View {
             
             ForEach(Array(entry.countdowns.enumerated()), id: \ .element.id) { index, countdownItem in
                 HStack {
-                    Text("\(countdownItem.emoji ?? "") \(countdownItem.name)")
+                    Image(systemName: countdownItem.resolvedIconName)
+                        .font(.footnote.weight(.semibold))
+                        .foregroundStyle(countdownItem.eventTintColor)
+
+                    Text(countdownItem.name)
                         .lineLimit(1)
                         .font(.footnote)
                     
