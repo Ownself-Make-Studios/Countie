@@ -13,6 +13,73 @@ extension UIKeyboardType {
     static let emoji = UIKeyboardType(rawValue: 124)
 }
 
+private struct CustomReminderSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let onSave: (CountdownReminderDraft) -> Void
+
+    @State private var days: Int = 0
+    @State private var hours: Int = 0
+    @State private var minutes: Int = 5
+
+    private var totalSeconds: Int {
+        (days * 24 * 60 * 60) + (hours * 60 * 60) + (minutes * 60)
+    }
+
+    private var draft: CountdownReminderDraft {
+        CountdownReminderDraft(
+            secondsBeforeEvent: totalSeconds,
+            customLabel: CountdownReminderDraft.fallbackLabel(for: totalSeconds)
+        )
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Picker("Days", selection: $days) {
+                    ForEach(0..<31, id: \.self) { value in
+                        Text("\(value)").tag(value)
+                    }
+                }
+
+                Picker("Hours", selection: $hours) {
+                    ForEach(0..<24, id: \.self) { value in
+                        Text("\(value)").tag(value)
+                    }
+                }
+
+                Picker("Minutes", selection: $minutes) {
+                    ForEach(0..<60, id: \.self) { value in
+                        Text("\(value)").tag(value)
+                    }
+                }
+
+                if totalSeconds > 0 {
+                    Text(draft.title)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .navigationTitle("Custom Reminder")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add") {
+                        onSave(draft)
+                        dismiss()
+                    }
+                    .disabled(totalSeconds <= 0)
+                }
+            }
+        }
+    }
+}
+
 struct AddCountdownView: View {
     @EnvironmentObject var store: CountdownStore
     @Environment(\.modelContext) private var modelContext
@@ -28,15 +95,13 @@ struct AddCountdownView: View {
     @State var name: String = ""
     @State var countdownDate: Date = Calendar.current.startOfDay(for: Date.now)
         .addingTimeInterval(7 * 24 * 60 * 60)
-    //    @State var countSinceDate: Date = Calendar.current.startOfDay(for: Date.now)
     @State var countSinceDate: Date = Date.now
     @State var hasTime: Bool = true
-    @State var updateCountdownWhenEventChanges: Bool = false
-    @State var reminders: [CountdownReminder] = []
-    @State private var selectedReminder: CountdownReminder = .FIVE_MIN
+    @State var reminderDrafts: [CountdownReminderDraft] = []
 
     @State private var showEmojiPicker: Bool = false
     @State private var linkedEvent: EKEvent? = nil
+    @State private var showCustomReminderSheet: Bool = false
 
     var isSubmitDisabled: Bool {
         name.isEmpty && emoji.isEmpty
@@ -62,21 +127,26 @@ struct AddCountdownView: View {
     }
 
     func handleSaveItem() {
+        let normalizedCountdownDate = hasTime
+            ? countdownDate
+            : Calendar.current.startOfDay(for: countdownDate)
+        let normalizedCountSinceDate = hasTime
+            ? countSinceDate
+            : Calendar.current.startOfDay(for: countSinceDate)
+
+        let normalizedReminders = reminderDrafts
+            .filter { $0.secondsBeforeEvent >= 0 }
+            .uniqued(by: \.secondsBeforeEvent)
+            .sorted { $0.secondsBeforeEvent < $1.secondsBeforeEvent }
+
+        let savedItem: CountdownItem
+
         if let editing = countdownToEdit {
-            // Edit existing
             editing.emoji = emoji
             editing.name = name
             editing.includeTime = hasTime
-            editing.date = countdownDate
-            editing.countSince = countSinceDate
-
-            // if includeTime is false, set the time to start of day
-            if !hasTime {
-                editing.date = Calendar.current.startOfDay(for: countdownDate)
-                editing.countSince = Calendar.current.startOfDay(
-                    for: countSinceDate
-                )
-            }
+            editing.date = normalizedCountdownDate
+            editing.countSince = normalizedCountSinceDate
 
             if let event = linkedEvent {
                 editing.calendarEventIdentifier = event.eventIdentifier
@@ -84,37 +154,89 @@ struct AddCountdownView: View {
                 editing.calendarEventIdentifier = nil
             }
 
+            replaceReminders(for: editing, with: normalizedReminders)
             try? modelContext.save()
+            savedItem = editing
         } else {
-            // Add new
             let item: CountdownItem = CountdownItem(
                 emoji: emoji,
                 name: name,
                 includeTime: hasTime,
-                date: countdownDate
+                date: normalizedCountdownDate
             )
-            item.countSince = countSinceDate
-
-            // if includeTime is false, set the time to start of day
-
-            if !hasTime {
-                item.date = Calendar.current.startOfDay(for: countdownDate)
-                item.countSince = Calendar.current.startOfDay(
-                    for: countSinceDate
-                )
-            }
+            item.countSince = normalizedCountSinceDate
 
             if let event = linkedEvent {
                 item.calendarEventIdentifier = event.eventIdentifier
             }
 
             modelContext.insert(item)
+            replaceReminders(for: item, with: normalizedReminders)
             try? modelContext.save()
+            savedItem = item
         }
+
+        let reminderRequests = CountdownReminderScheduler.snapshot(for: savedItem)
+        let countdownID = savedItem.id
+        let countdownName = savedItem.name
+        let countdownEmoji = savedItem.emoji
+        let eventDate = savedItem.date
+        Task {
+            await CountdownReminderScheduler.syncNotifications(
+                countdownID: countdownID,
+                countdownName: countdownName,
+                countdownEmoji: countdownEmoji,
+                eventDate: eventDate,
+                reminders: reminderRequests
+            )
+        }
+
         WidgetCenter.shared.reloadAllTimelines()
         store.fetchCountdowns()
         dismiss()
         onAdd?()
+    }
+
+    private func replaceReminders(for item: CountdownItem, with drafts: [CountdownReminderDraft]) {
+        for existingReminder in item.reminders {
+            modelContext.delete(existingReminder)
+        }
+        item.reminders.removeAll()
+
+        for draft in drafts {
+            let reminder = CountdownReminder(
+                secondsBeforeEvent: draft.secondsBeforeEvent,
+                customLabel: draft.customLabel
+            )
+            reminder.countdown = item
+            modelContext.insert(reminder)
+            item.reminders.append(reminder)
+        }
+    }
+
+    private func togglePreset(_ preset: CountdownReminderPreset) {
+        if let index = reminderDrafts.firstIndex(where: { $0.secondsBeforeEvent == preset.secondsBeforeEvent }) {
+            reminderDrafts.remove(at: index)
+        } else {
+            reminderDrafts.append(
+                CountdownReminderDraft(
+                    secondsBeforeEvent: preset.secondsBeforeEvent,
+                    customLabel: nil
+                )
+            )
+        }
+
+        reminderDrafts.sort { $0.secondsBeforeEvent < $1.secondsBeforeEvent }
+    }
+
+    private func addCustomReminder(_ draft: CountdownReminderDraft) {
+        guard !reminderDrafts.contains(where: { $0.secondsBeforeEvent == draft.secondsBeforeEvent }) else { return }
+        reminderDrafts.append(draft)
+        reminderDrafts.sort { $0.secondsBeforeEvent < $1.secondsBeforeEvent }
+    }
+
+    private func removeReminder(_ draft: CountdownReminderDraft) {
+        reminderDrafts.removeAll { $0.id == draft.id || $0.secondsBeforeEvent == draft.secondsBeforeEvent }
     }
 
     var body: some View {
@@ -222,11 +344,42 @@ struct AddCountdownView: View {
                     }
                 }
 
-                //                Section("Reminders") {
-                //                    Button("Add Reminder"){
-                //
-                //                    }
-                //                }
+                Section("Remind Me") {
+                    ForEach(CountdownReminderPreset.allCases) { preset in
+                        Button {
+                            togglePreset(preset)
+                        } label: {
+                            HStack {
+                                Text(preset.title)
+                                Spacer()
+                                if reminderDrafts.contains(where: { $0.secondsBeforeEvent == preset.secondsBeforeEvent }) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(.tint)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    Button("Custom...") {
+                        showCustomReminderSheet = true
+                    }
+
+                    if !reminderDrafts.isEmpty {
+                        ForEach(reminderDrafts) { reminder in
+                            HStack {
+                                Text(reminder.title)
+                                Spacer()
+                                Button(role: .destructive) {
+                                    removeReminder(reminder)
+                                } label: {
+                                    Image(systemName: "minus.circle.fill")
+                                }
+                                .buttonStyle(.borderless)
+                            }
+                        }
+                    }
+                }
 
                 // Keyboard for the emoji picker!
                 TextField("Emoji", text: $emoji)
@@ -257,6 +410,11 @@ struct AddCountdownView: View {
             }
 
         }
+        .sheet(isPresented: $showCustomReminderSheet) {
+            CustomReminderSheet { draft in
+                addCustomReminder(draft)
+            }
+        }
         .onAppear {
             if let editing = countdownToEdit {
                 emoji = editing.emoji ?? ""
@@ -264,9 +422,9 @@ struct AddCountdownView: View {
                 hasTime = editing.includeTime
                 countdownDate = editing.date
                 countSinceDate = editing.countSince
+                reminderDrafts = editing.reminderDrafts
 
                 if let eventIdentifier = editing.calendarEventIdentifier {
-
                     linkedEvent = CalendarAccessManager.event(
                         with: eventIdentifier
                     )
@@ -287,4 +445,12 @@ struct AddCountdownView: View {
 #Preview {
     AddCountdownView()
         .modelContainer(for: CountdownItem.self, inMemory: true)
+        .modelContainer(for: CountdownReminder.self, inMemory: true)
+}
+
+private extension Array {
+    func uniqued<Value: Hashable>(by keyPath: KeyPath<Element, Value>) -> [Element] {
+        var seen: Set<Value> = []
+        return filter { seen.insert($0[keyPath: keyPath]).inserted }
+    }
 }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		BD47E7BA2CD276BC00937C31 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = BD47E7B92CD276B600937C31 /* README.md */; };
+		BD5B338A2F00000100C0FFEE /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = BD5B33892F00000100C0FFEE /* ConfettiSwiftUI */; };
 		BD9807F72CC796090033C727 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD9807F62CC796090033C727 /* WidgetKit.framework */; };
 		BD9807F92CC796090033C727 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BD9807F82CC796090033C727 /* SwiftUI.framework */; };
 		BD98080A2CC7960B0033C727 /* CountdownWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = BD9807F42CC796090033C727 /* CountdownWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -84,6 +85,22 @@
 			);
 			target = BD92FC0E2CC73FE500D3FC20 /* noma */;
 		};
+		BD86E8572F909A7200F2DE76 /* Exceptions for "noma" folder in "nomaTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
+			);
+			target = BD92FC202CC73FE700D3FC20 /* nomaTests */;
+		};
+		BD86E8582F909A7200F2DE76 /* Exceptions for "noma" folder in "nomaUITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
+			);
+			target = BD92FC2A2CC73FE700D3FC20 /* nomaUITests */;
+		};
 		BD98080B2CC7960B0033C727 /* Exceptions for "CountdownWidget" folder in "CountdownWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -98,6 +115,7 @@
 				CalendarAccessManager.swift,
 				Model/CountdownItem.swift,
 				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
 				Model/CountdownStore.swift,
 				Model/EmojiDominantColor.swift,
 				Model/ModalStore.swift,
@@ -120,6 +138,7 @@
 				CalendarAccessManager.swift,
 				Model/CountdownItem.swift,
 				Model/CountdownReminder.swift,
+				Model/CountdownReminderScheduler.swift,
 				Model/CountdownStore.swift,
 				Model/ModalStore.swift,
 				Model/ModelContainer.swift,
@@ -147,6 +166,8 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				BD4C6B432CD5C79E00F4F03E /* Exceptions for "noma" folder in "noma" target */,
+				BD86E8572F909A7200F2DE76 /* Exceptions for "noma" folder in "nomaTests" target */,
+				BD86E8582F909A7200F2DE76 /* Exceptions for "noma" folder in "nomaUITests" target */,
 				BD9808112CC797B10033C727 /* Exceptions for "noma" folder in "CountdownWidgetExtension" target */,
 				BDAE70652E0BF2F000099A3A /* Exceptions for "noma" folder in "MultipleCountdownWidgetExtension" target */,
 			);
@@ -188,6 +209,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BD5B338A2F00000100C0FFEE /* ConfettiSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +309,7 @@
 			);
 			name = noma;
 			packageProductDependencies = (
+				BD5B33892F00000100C0FFEE /* ConfettiSwiftUI */,
 			);
 			productName = noma;
 			productReference = BD92FC0F2CC73FE500D3FC20 /* Noma.app */;
@@ -421,6 +444,7 @@
 			mainGroup = BD92FC062CC73FE500D3FC20;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				BD5B33882F00000100C0FFEE /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BD92FC102CC73FE500D3FC20 /* Products */;
@@ -966,6 +990,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BD5B33882F00000100C0FFEE /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BD5B33892F00000100C0FFEE /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BD5B33882F00000100C0FFEE /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BD92FC072CC73FE500D3FC20 /* Project object */;
 }

@@ -11,6 +11,7 @@ struct NomaModelContainer {
     static var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             CountdownItem.self,
+            CountdownReminder.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ConfettiSwiftUI
 
 struct CountdownDetailView: View {
     @EnvironmentObject var store: CountdownStore
@@ -19,6 +20,29 @@ struct CountdownDetailView: View {
 
     @State private var now: Date = Date()
     @State private var timer: Timer? = nil
+    @State private var confettiTrigger: Int = 0
+    @State private var hasCelebratedCompletion: Bool = false
+
+    private var confettiColors: [Color] {
+        [
+            Color(vibrantDominantColorOf: countdown.emoji ?? "") ?? .accentColor,
+            .orange,
+            .yellow,
+            .pink,
+            .mint,
+        ]
+    }
+
+    private var confettiContent: [ConfettiType] {
+        let emoji = countdown.emoji.flatMap { $0.isEmpty ? nil : $0 } ?? "🎉"
+        return [
+            .text(emoji),
+            .shape(.circle),
+            .shape(.triangle),
+            .shape(.square),
+            .shape(.slimRectangle),
+        ]
+    }
 
     func handleDelete() {
         store.deleteCountdown(countdown)
@@ -130,6 +154,18 @@ struct CountdownDetailView: View {
                     }
                     .padding(.vertical, 10)
 
+//                    Button {
+//                        confettiTrigger += 1
+//                    } label: {
+//                        Label("Test Confetti", systemImage: "sparkles")
+//                            .font(.caption.weight(.semibold))
+//                            .padding(.horizontal, 12)
+//                            .padding(.vertical, 8)
+//                    }
+//                    .buttonStyle(.borderedProminent)
+//                    .controlSize(.small)
+//                    .padding(.top, 8)
+
                 }
             }
             .toolbar {
@@ -140,11 +176,32 @@ struct CountdownDetailView: View {
                 }
             }
         }
+        .confettiCannon(
+            trigger: $confettiTrigger,
+            num: 100,
+            confettis: confettiContent,
+            confettiSize: 14,
+            rainHeight: 900,
+            fadesOut: true,
+            openingAngle: .degrees(60),
+            closingAngle: .degrees(360),
+            radius: 300,
+            repetitions: 1,
+            repetitionInterval: 0.18,
+            hapticFeedback: true
+        )
         .onAppear {
+            now = Date()
+            hasCelebratedCompletion = countdown.date <= now
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {
                 _ in
                 now = Date()
             }
+        }
+        .onChange(of: now) { _, newValue in
+            guard !hasCelebratedCompletion, newValue >= countdown.date else { return }
+            hasCelebratedCompletion = true
+            confettiTrigger += 1
         }
         .onDisappear {
             timer?.invalidate()

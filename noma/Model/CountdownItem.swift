@@ -27,6 +27,8 @@ class CountdownItem {
     @Attribute var createdAt: Date = Date.now
     @Attribute var countSince: Date = Date.now
     @Attribute var calendarEventIdentifier: String?
+    @Relationship(deleteRule: .cascade, inverse: \CountdownReminder.countdown)
+    var reminders: [CountdownReminder] = []
 
     init(
         emoji: String?,
@@ -155,6 +157,17 @@ class CountdownItem {
         df.dateStyle = .long
         df.timeStyle = .short
         return df.string(from: date)
+    }
+
+    var reminderDrafts: [CountdownReminderDraft] {
+        reminders
+            .map(CountdownReminderDraft.fromModel)
+            .sorted { lhs, rhs in
+                if lhs.secondsBeforeEvent == rhs.secondsBeforeEvent {
+                    return lhs.title < rhs.title
+                }
+                return lhs.secondsBeforeEvent < rhs.secondsBeforeEvent
+            }
     }
 }
 
