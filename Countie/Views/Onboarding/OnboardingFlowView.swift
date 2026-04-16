@@ -9,6 +9,7 @@ enum OnboardingMode {
 struct OnboardingFlowView: View {
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorScheme) private var colorScheme
 
     let mode: OnboardingMode
     let onFinish: () -> Void
@@ -21,8 +22,16 @@ struct OnboardingFlowView: View {
 
     private let pageCount = 3
 
+    private var surfaceColor: Color {
+        colorScheme == .dark ? Color.black : Color.white
+    }
+
     private var isLastPage: Bool {
         selectedPage == pageCount - 1
+    }
+    
+    private var isFirstPage: Bool {
+        selectedPage == 0
     }
 
     private var finishTitle: String {
@@ -48,26 +57,15 @@ struct OnboardingFlowView: View {
                     }
                     .tag(2)
                 }
-                .tabViewStyle(.page(indexDisplayMode: .always))
-                .indexViewStyle(.page(backgroundDisplayMode: .interactive))
+                .tabViewStyle(.page(indexDisplayMode: .never))
 
-                VStack(spacing: 12) {
-                    Button(isLastPage ? finishTitle : "Continue") {
-                        if isLastPage {
-                            onFinish()
-                        } else {
-                            withAnimation(.easeInOut(duration: 0.32)) {
-                                selectedPage += 1
-                            }
-                        }
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
-                    .frame(maxWidth: .infinity)
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 24)
+                OnboardingPageIndicator(
+                    pageCount: pageCount,
+                    selectedPage: selectedPage
+                )
+                .padding(.bottom, 12)
             }
+            .background(surfaceColor)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 if mode == .firstLaunch || mode == .settings {
@@ -85,7 +83,30 @@ struct OnboardingFlowView: View {
                     }
                 }
             }
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 0) {
+                    Divider()
+
+                    Button(isFirstPage ? "Get Started" : isLastPage ? finishTitle : "Continue") {
+                        if isLastPage {
+                            onFinish()
+                        } else {
+                            withAnimation(.easeInOut(duration: 0.32)) {
+                                selectedPage += 1
+                            }
+                        }
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 16)
+                    .padding(.bottom, 12)
+                }
+                .background(surfaceColor)
+            }
         }
+        .background(surfaceColor)
         .task {
             await refreshPermissionState()
         }
@@ -241,7 +262,27 @@ private struct OnboardingPage<Content: View>: View {
                     .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity, minHeight: 520)
+            .padding(.bottom, 120)
         }
+    }
+}
+
+private struct OnboardingPageIndicator: View {
+    let pageCount: Int
+    let selectedPage: Int
+
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(0..<pageCount, id: \.self) { index in
+                Capsule(style: .circular)
+                    .fill(index == selectedPage ? Color.primary : Color.secondary.opacity(0.25))
+                    .frame(width: index == selectedPage ? 22 : 8, height: 8)
+                    .animation(.easeInOut(duration: 0.2), value: selectedPage)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("Onboarding progress")
+        .accessibilityValue("Step \(selectedPage + 1) of \(pageCount)")
     }
 }
 
