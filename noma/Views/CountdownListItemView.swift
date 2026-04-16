@@ -21,6 +21,10 @@ struct CountdownListItemView: View {
         item.date < currentTime
     }
 
+    var hasReminder: Bool {
+        !item.reminders.isEmpty
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
 
@@ -68,6 +72,14 @@ struct CountdownListItemView: View {
 
                     item.calendarEventIdentifier != nil
                         ? Image(systemName: "calendar")
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fit)
+                            .frame(width: 12, height: 16)
+                            .opacity(0.5)
+                        : nil
+
+                    hasReminder
+                        ? Image(systemName: "bell")
                             .resizable()
                             .aspectRatio(1, contentMode: .fit)
                             .frame(width: 12, height: 16)

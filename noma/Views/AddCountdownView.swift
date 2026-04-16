@@ -16,48 +16,47 @@ extension UIKeyboardType {
 private struct CustomReminderSheet: View {
     @Environment(\.dismiss) private var dismiss
 
+    let eventDate: Date
     let onSave: (CountdownReminderDraft) -> Void
 
-    @State private var days: Int = 0
-    @State private var hours: Int = 0
-    @State private var minutes: Int = 5
+    @State private var reminderDate: Date
 
-    private var totalSeconds: Int {
-        (days * 24 * 60 * 60) + (hours * 60 * 60) + (minutes * 60)
+    init(eventDate: Date, onSave: @escaping (CountdownReminderDraft) -> Void) {
+        self.eventDate = eventDate
+        self.onSave = onSave
+
+        let minimumDate = Date.now
+        let proposedDate = minimumDate.addingTimeInterval(5 * 60)
+        _reminderDate = State(initialValue: min(eventDate, proposedDate))
+    }
+
+    private var boundedReminderDate: Date {
+        min(max(reminderDate, Date.now), eventDate)
+    }
+
+    private var secondsBeforeEvent: Int {
+        max(Int(eventDate.timeIntervalSince(boundedReminderDate)), 0)
     }
 
     private var draft: CountdownReminderDraft {
         CountdownReminderDraft(
-            secondsBeforeEvent: totalSeconds,
-            customLabel: CountdownReminderDraft.fallbackLabel(for: totalSeconds)
+            secondsBeforeEvent: secondsBeforeEvent,
+            customLabel: CountdownReminderDraft.fallbackLabel(for: secondsBeforeEvent)
         )
     }
 
     var body: some View {
         NavigationStack {
             Form {
-                Picker("Days", selection: $days) {
-                    ForEach(0..<31, id: \.self) { value in
-                        Text("\(value)").tag(value)
-                    }
-                }
+                DatePicker(
+                    "Reminder Date & Time",
+                    selection: $reminderDate,
+                    in: Date.now...eventDate,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
 
-                Picker("Hours", selection: $hours) {
-                    ForEach(0..<24, id: \.self) { value in
-                        Text("\(value)").tag(value)
-                    }
-                }
-
-                Picker("Minutes", selection: $minutes) {
-                    ForEach(0..<60, id: \.self) { value in
-                        Text("\(value)").tag(value)
-                    }
-                }
-
-                if totalSeconds > 0 {
-                    Text(draft.title)
-                        .foregroundStyle(.secondary)
-                }
+                Text(draft.title)
+                    .foregroundStyle(.secondary)
             }
             .navigationTitle("Custom Reminder")
             .navigationBarTitleDisplayMode(.inline)
@@ -73,9 +72,11 @@ private struct CustomReminderSheet: View {
                         onSave(draft)
                         dismiss()
                     }
-                    .disabled(totalSeconds <= 0)
                 }
             }
+        }
+        .onChange(of: reminderDate) { _, newValue in
+            reminderDate = min(max(newValue, Date.now), eventDate)
         }
     }
 }
@@ -229,6 +230,12 @@ struct AddCountdownView: View {
         reminderDrafts.sort { $0.secondsBeforeEvent < $1.secondsBeforeEvent }
     }
 
+    private var availablePresets: [CountdownReminderPreset] {
+        CountdownReminderPreset.allCases.filter { preset in
+            !reminderDrafts.contains(where: { $0.secondsBeforeEvent == preset.secondsBeforeEvent })
+        }
+    }
+
     private func addCustomReminder(_ draft: CountdownReminderDraft) {
         guard !reminderDrafts.contains(where: { $0.secondsBeforeEvent == draft.secondsBeforeEvent }) else { return }
         reminderDrafts.append(draft)
@@ -345,39 +352,27 @@ struct AddCountdownView: View {
                 }
 
                 Section("Remind Me") {
-                    ForEach(CountdownReminderPreset.allCases) { preset in
-                        Button {
-                            togglePreset(preset)
-                        } label: {
-                            HStack {
-                                Text(preset.title)
-                                Spacer()
-                                if reminderDrafts.contains(where: { $0.secondsBeforeEvent == preset.secondsBeforeEvent }) {
-                                    Image(systemName: "checkmark")
-                                        .foregroundStyle(.tint)
-                                }
-                            }
-                        }
-                        .buttonStyle(.plain)
+                    ForEach(reminderDrafts) { reminder in
+                        Text(reminder.title)
+                    }
+                    .onDelete { offsets in
+                        reminderDrafts.remove(atOffsets: offsets)
                     }
 
-                    Button("Custom...") {
-                        showCustomReminderSheet = true
-                    }
-
-                    if !reminderDrafts.isEmpty {
-                        ForEach(reminderDrafts) { reminder in
-                            HStack {
-                                Text(reminder.title)
-                                Spacer()
-                                Button(role: .destructive) {
-                                    removeReminder(reminder)
-                                } label: {
-                                    Image(systemName: "minus.circle.fill")
-                                }
-                                .buttonStyle(.borderless)
+                    Menu {
+                        ForEach(availablePresets) { preset in
+                            Button(preset.title) {
+                                togglePreset(preset)
                             }
                         }
+
+                        Divider()
+
+                        Button("Custom...") {
+                            showCustomReminderSheet = true
+                        }
+                    } label: {
+                        Label("Add", systemImage: "plus")
                     }
                 }
 
@@ -411,7 +406,7 @@ struct AddCountdownView: View {
 
         }
         .sheet(isPresented: $showCustomReminderSheet) {
-            CustomReminderSheet { draft in
+            CustomReminderSheet(eventDate: countdownDate) { draft in
                 addCustomReminder(draft)
             }
         }

@@ -8,6 +8,44 @@
 import SwiftUI
 import ConfettiSwiftUI
 
+private struct CountdownTimeUnitCard: View {
+    let value: Int
+    let unit: String
+
+    private var formattedValue: String {
+        String(format: "%02d", value)
+    }
+
+    var body: some View {
+        VStack(spacing: 6) {
+            Text(formattedValue)
+                .font(.title2.monospacedDigit())
+                .fontWeight(.bold)
+                .contentTransition(.numericText(countsDown: true))
+                .animation(.snappy(duration: 0.32), value: value)
+                .frame(minWidth: 36, minHeight: 36)
+                .padding(3)
+                .padding(.horizontal, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(
+                            Color.primary.opacity(0.2),
+                            lineWidth: 1
+                        )
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(Color(.systemBackground).opacity(0.7))
+                        )
+                )
+
+            Text(unit)
+                .font(.caption2)
+                .foregroundColor(.secondary)
+                .frame(minWidth: 36)
+        }
+    }
+}
+
 struct CountdownDetailView: View {
     @EnvironmentObject var store: CountdownStore
 
@@ -41,6 +79,21 @@ struct CountdownDetailView: View {
             .shape(.triangle),
             .shape(.square),
             .shape(.slimRectangle),
+        ]
+    }
+
+    private var remainingValues: [(value: Int, unit: String)] {
+        let components = Calendar.autoupdatingCurrent.dateComponents(
+            [.day, .hour, .minute, .second],
+            from: now,
+            to: countdown.date
+        )
+
+        return [
+            (max(0, components.day ?? 0), "days"),
+            (max(0, components.hour ?? 0), "hours"),
+            (max(0, components.minute ?? 0), "minutes"),
+            (max(0, components.second ?? 0), "seconds"),
         ]
     }
 
@@ -102,53 +155,13 @@ struct CountdownDetailView: View {
                         .opacity(0.5)
                         .multilineTextAlignment(.center)
 
-                    // Segregated countdown display
-                    let components = Calendar.current.dateComponents(
-                        [.day, .hour, .minute, .second],
-                        from: now,
-                        to: countdown.date
-                    )
-                    let values = [
-                        max(0, components.day ?? 0),
-                        max(0, components.hour ?? 0),
-                        max(0, components.minute ?? 0),
-                        max(0, components.second ?? 0),
-                    ]
-                    let units = ["days", "hours", "minutes", "seconds"]
-
                     VStack(spacing: 4) {
                         HStack(spacing: 8) {
-                            ForEach(0..<values.count, id: \.self) { idx in
-                                VStack {
-                                    Text(
-                                        "\(values[idx] < 10 ? "0" : "")\(values[idx])"
-                                    )
-                                    .font(.title2.monospacedDigit())
-                                    .bold()
-                                    .frame(minWidth: 36, minHeight: 36)
-                                    .padding(3)
-                                    .padding(.horizontal, 6)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .stroke(
-                                                Color.primary.opacity(0.2),
-                                                lineWidth: 1
-                                            )
-                                            .background(
-                                                RoundedRectangle(
-                                                    cornerRadius: 8
-                                                ).fill(
-                                                    Color(.systemBackground)
-                                                        .opacity(0.7)
-                                                )
-                                            )
-                                    )
-                                    
-                                    Text(units[idx])
-                                     .font(.caption2)
-                                    .foregroundColor(.secondary)
-                                    .frame(minWidth: 36)
-                                }
+                            ForEach(Array(remainingValues.enumerated()), id: \.offset) { _, item in
+                                CountdownTimeUnitCard(
+                                    value: item.value,
+                                    unit: item.unit
+                                )
                             }
                         }
                     }
@@ -195,7 +208,9 @@ struct CountdownDetailView: View {
             hasCelebratedCompletion = countdown.date <= now
             timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) {
                 _ in
-                now = Date()
+                withAnimation(.snappy(duration: 0.32)) {
+                    now = Date()
+                }
             }
         }
         .onChange(of: now) { _, newValue in
