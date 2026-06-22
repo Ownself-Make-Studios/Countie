@@ -22,7 +22,7 @@ struct CircularEventIconView: View {
     var body: some View {
         Circle()
             .frame(width: CGFloat(width))
-            .foregroundStyle(tint.opacity(0.16))
+            .foregroundStyle(tint.opacity(0.3))
             .overlay {
                 Image(systemName: iconName)
                     .font(.system(size: iconSize, weight: .semibold))
@@ -40,13 +40,17 @@ struct CircularEventIconView: View {
                     )
                 }
             }
-            .padding(.horizontal, showProgress ? 4 : 0)
+            .padding(.all, showProgress ? 7 : 0)
 
     }
 }
 
 typealias CircularEmojiView = CircularEventIconView
 
-#Preview(traits: .sizeThatFitsLayout) {
+#Preview("Default States", traits: .sizeThatFitsLayout) {
     CircularEventIconView(showProgress: true)
+}
+
+#Preview("No Progress Variants", traits: .sizeThatFitsLayout) {
+    CircularEventIconView(showProgress: false)
 }

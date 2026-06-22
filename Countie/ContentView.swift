@@ -75,6 +75,8 @@ struct ContentView: View {
                 //                }
 
             }
+            
+//            .navigationTitle("Countie")
             .toolbar {
                 ToolbarItem {
                     NavigationLink(
@@ -111,11 +113,12 @@ struct ContentView: View {
                                 systemImage: "calendar.badge.plus"
                             )
                         }
+                        .disabled(true)
 
                         Button(action: {
                             showAddModal = true
                         }) {
-                            Label("Custom", systemImage: "plus")
+                            Label("Add Manually", systemImage: "square.and.pencil")
                                 .labelStyle(.titleAndIcon)
                         }
 
@@ -123,11 +126,44 @@ struct ContentView: View {
                         Label("Add Countdown", systemImage: "plus")
                             .labelStyle(.titleAndIcon)
                     }
+                    .buttonStyle(.borderedProminent)
                 }
 
             }
-            .navigationTitle("Countie")
         }
+//        .overlay(alignment: .bottom) {
+//            if #available(iOS 26.0, *) {
+//                GlassEffectContainer(spacing: 10){
+//                    HStack(spacing: 10){
+//                        
+//                        Button {
+//                            
+//                        } label : {
+//                            Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+//                                .font(.title3)
+//                                .frame(width: 30, height: 40)
+//                        }
+//                        .buttonStyle(.glass)
+//                        
+//                        Spacer()
+//                        
+//                        Button {
+//                            
+//                        } label : {
+//                            Image(systemName: "plus")
+//                                .font(.title3)
+//                                .frame(width: 30, height: 40)
+//                        }
+//                        .buttonStyle(.glassProminent)
+//                    }
+//                    
+//                }
+//                .padding(.horizontal)
+//            } else {
+//                // Fallback on earlier versions
+//            }
+//            
+//        }
         .sheet(isPresented: $showAddModal) {
             NavigationView {
                 AddCountdownView()
@@ -182,7 +218,10 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(NomaModelContainer.sharedModelContainer)
-    //        .modelContainer(for: CountdownItem.self, inMemory: true)
+    let container = NomaModelContainer.sharedModelContainer
+    let store = CountdownStore(context: container.mainContext)
+    return ContentView()
+        .modelContainer(container)
+        .environmentObject(store)
+        .environmentObject(ModalStore())
 }

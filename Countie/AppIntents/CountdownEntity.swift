@@ -1,0 +1,92 @@
+import AppIntents
+import Foundation
+import SwiftData
+
+public struct CountdownEntity: AppEntity, Identifiable, Hashable {
+    public static var typeDisplayRepresentation = TypeDisplayRepresentation(
+        name: "Countdown"
+    )
+
+    public static var defaultQuery = CountdownEntityQuery()
+
+    public let id: String
+    public let name: String
+    public let date: Date
+    public let iconName: String
+
+    public var displayRepresentation: DisplayRepresentation {
+        DisplayRepresentation(
+            title: "\(name)",
+            subtitle: "\(date.formatted(date: .abbreviated, time: .shortened))",
+            image: .init(systemName: iconName)
+        )
+    }
+
+    public init(
+        id: String,
+        name: String,
+        date: Date,
+        iconName: String
+    ) {
+        self.id = id
+        self.name = name
+        self.date = date
+        self.iconName = iconName
+    }
+
+    init(item: CountdownItem) {
+        self.init(
+            id: item.id.uuidString,
+            name: item.name,
+            date: item.date,
+            iconName: item.resolvedIconName
+        )
+    }
+}
+
+public struct CountdownEntityQuery: EntityStringQuery {
+    public init() {}
+
+    public func entities(for identifiers: [CountdownEntity.ID]) async throws -> [CountdownEntity] {
+        let identifierSet = Set(identifiers)
+        return await fetchCountdownEntities(includePast: true)
+            .filter { identifierSet.contains($0.id) }
+    }
+
+    public func suggestedEntities() async throws -> [CountdownEntity] {
+        await fetchCountdownEntities(includePast: false)
+    }
+
+    public func entities(matching string: String) async throws -> [CountdownEntity] {
+        let searchText = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !searchText.isEmpty else {
+            return await fetchCountdownEntities(includePast: false)
+        }
+
+        return await fetchCountdownEntities(includePast: true)
+            .filter { entity in
+                entity.name.localizedCaseInsensitiveContains(searchText)
+                    || entity.date.formatted(date: .abbreviated, time: .omitted)
+                        .localizedCaseInsensitiveContains(searchText)
+                    || entity.date.formatted(date: .complete, time: .shortened)
+                        .localizedCaseInsensitiveContains(searchText)
+            }
+    }
+
+    @MainActor
+    private func fetchCountdownEntities(includePast: Bool) async -> [CountdownEntity] {
+        let now = Date()
+        let descriptor = FetchDescriptor<CountdownItem>(
+            predicate: #Predicate<CountdownItem> { item in
+                item.isDeleted == false && (includePast || item.date >= now)
+            },
+            sortBy: [
+                SortDescriptor(\CountdownItem.date, order: .forward)
+            ]
+        )
+
+        let container = NomaModelContainer.sharedModelContainer
+        let items = (try? container.mainContext.fetch(descriptor)) ?? []
+        return items.map { CountdownEntity(item: $0) }
+    }
+}

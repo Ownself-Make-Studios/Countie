@@ -8,6 +8,7 @@
 import EventKit
 import SwiftUI
 import WidgetKit
+import SwiftData
 
 private struct IconPickerSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -44,11 +45,11 @@ private struct IconPickerSheet: View {
                                     .multilineTextAlignment(.center)
                                     .lineLimit(2)
 
-                                Text(icon.symbolName)
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
-                                    .multilineTextAlignment(.center)
-                                    .lineLimit(2)
+//                                Text(icon.symbolName)
+//                                    .font(.caption2)
+//                                    .foregroundStyle(.secondary)
+//                                    .multilineTextAlignment(.center)
+//                                    .lineLimit(2)
                             }
                             .foregroundStyle(selectedIconName == icon.symbolName ? .white : .primary)
                             .frame(maxWidth: .infinity, minHeight: 108)
@@ -157,7 +158,7 @@ private struct CountdownPreviewSection: View {
                 tint: color.color,
                 progress: 0.75,
                 showProgress: false,
-                width: 120,
+                width: 100,
                 iconSize: 42
             )
             Spacer()
@@ -180,11 +181,33 @@ private struct AppearanceSection: View {
 
     var body: some View {
         Section("Appearance") {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Color")
-                    .font(.subheadline.weight(.medium))
+            Button(action: onChooseIcon) {
+                HStack(spacing: 12) {
+                    Image(systemName: iconName)
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(color.color)
+                        .frame(width: 36, height: 36)
+                        .background(color.color.opacity(0.14), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
 
-                LazyVGrid(columns: colorColumns, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Icon")
+                            .foregroundStyle(.primary)
+                        Text("Selected: \(selectedIconLabel)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            .buttonStyle(.plain)
+            
+                          ScrollView(.horizontal, showsIndicators: false){
+                    LazyHStack(spacing: 12) {
+                        
                     ForEach(CountdownEventColor.allCases) { option in
                         Button {
                             color = option
@@ -207,32 +230,11 @@ private struct AppearanceSection: View {
                         .buttonStyle(.plain)
                         .accessibilityLabel(option.title)
                     }
-                }
-            }
-            .padding(.vertical, 4)
-
-            Button(action: onChooseIcon) {
-                HStack(spacing: 12) {
-                    Image(systemName: iconName)
-                        .font(.title3.weight(.semibold))
-                        .foregroundStyle(color.color)
-                        .frame(width: 36, height: 36)
-                        .background(color.color.opacity(0.14), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Icon")
-                            .foregroundStyle(.primary)
-                        Text(selectedIconLabel)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                
                     }
-
-                    Spacer()
-
-                    Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.secondary)
                 }
-            }
+
+
         }
     }
 }
@@ -278,12 +280,12 @@ private struct CountdownSettingsSection: View {
     let isDateEditingDisabled: Bool
 
     var body: some View {
-        Section("Countdown Settings") {
+        Section("Countdown Details") {
             Toggle("Include Time of day", isOn: $hasTime)
                 .disabled(isDateEditingDisabled)
 
             DatePicker(
-                "Countdown Target Date\(hasTime ? " & Time" : "")",
+                "Countdown End Date\(hasTime ? " & Time" : "")",
                 selection: $countdownDate,
                 in: Date.now...,
                 displayedComponents: hasTime
@@ -402,7 +404,7 @@ struct AddCountdownView: View {
     var body: some View {
         NavigationStack {
             Form {
-                CountdownPreviewSection(iconName: iconName, color: color)
+//                CountdownPreviewSection(iconName: iconName, color: color)
 
                 Section("Countdown Name") {
                     TextField("Graduation, Anniversary, etc.", text: $name)
@@ -634,5 +636,20 @@ private extension Array {
     func uniqued<Value: Hashable>(by keyPath: KeyPath<Element, Value>) -> [Element] {
         var seen: Set<Value> = []
         return filter { seen.insert($0[keyPath: keyPath]).inserted }
+    }
+}
+
+
+
+struct InputDemo: View {
+    @State private var text = ""
+    var body: some View {
+        VStack {
+            TextField("Type here", text: $text)
+                .textFieldStyle(.roundedBorder)
+                .padding()
+            Text("You typed: \(text)")
+        }
+        .padding()
     }
 }

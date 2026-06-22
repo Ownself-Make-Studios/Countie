@@ -64,6 +64,8 @@ struct CountdownListView: View {
                     )
                 }
             }
+            .listStyle(.plain)
+            .listRowSeparator(.hidden)
             .searchable(text: $searchText, prompt: "Search countdowns")
         }
     }
