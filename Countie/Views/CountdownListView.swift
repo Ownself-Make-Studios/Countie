@@ -87,10 +87,12 @@ private struct CountdownMonthSection: View {
                 EmptyCountdownMonthRow(month: month)
             } else {
                 ForEach(items, id: \.id) { countdown in
-                    CountdownListItemView(
+                    CountdownRow(
                         item: countdown,
                         onTap: { onSelectCountdown(countdown) }
                     )
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.init(top: 15, leading: 15, bottom: 15, trailing: 15))
                 }
             }
         }

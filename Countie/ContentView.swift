@@ -112,6 +112,7 @@ struct ContentView: View {
                                 "Add from calendar",
                                 systemImage: "calendar.badge.plus"
                             )
+                            .labelStyle(.titleAndIcon)
                         }
                         .disabled(true)
 
@@ -133,39 +134,74 @@ struct ContentView: View {
         }
 //        .overlay(alignment: .bottom) {
 //            if #available(iOS 26.0, *) {
-//                GlassEffectContainer(spacing: 10){
-//                    HStack(spacing: 10){
+//                GlassEffectContainer(spacing: 0){
+//                    HStack(spacing: 5){
 //                        
 //                        Button {
 //                            
 //                        } label : {
 //                            Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
 //                                .font(.title3)
-//                                .frame(width: 30, height: 40)
+//                                .frame(width: 30, height: 35)
 //                        }
 //                        .buttonStyle(.glass)
 //                        
-//                        Spacer()
-//                        
+//                        ScrollView(.horizontal, showsIndicators: false){
+//                            LazyHStack(spacing: 0){
+//                                 VStack{
+//                                    Text("January")
+//                                         .bold()
+//                                     Text("2026")
+//                                         .font(.caption2)
+//                                         
+//                                }
+//                                    .containerRelativeFrame(.horizontal)
+//                                    .frame(maxHeight: .infinity)
+//                                    .clipShape(.capsule)
+//                                    .glassEffect(.regular.tint(.white.opacity(0.1)))
+//                            Text("Feb 2026")
+//                                    .containerRelativeFrame(.horizontal)
+//                                    .frame(maxHeight: .infinity)
+//                                .clipShape(.capsule)
+//                                    .glassEffect(.regular.tint(.white.opacity(0.1)))
+//                                VStack{
+//                                    Text("2026")
+//                                    Text("Mar")
+//                                }
+//                                    .containerRelativeFrame(.horizontal)
+//                                    .frame(maxHeight: .infinity)
+//                                .clipShape(.capsule)
+//                                    .glassEffect(.regular.tint(.white.opacity(0.1)))
+//                            }
+//                        }
+//                        .frame(height: 45)
+//                        .scrollTargetBehavior(.paging)
+//                        .clipShape(.capsule)
+//                        .padding(5)
+//                        .glassEffect(.clear.interactive(false), in: .capsule)
+//
 //                        Button {
 //                            
 //                        } label : {
-//                            Image(systemName: "plus")
-//                                .font(.title3)
-//                                .frame(width: 30, height: 40)
+//                            Label("Add", systemImage: "plus")
+//                                .padding(.horizontal, 10)
+//                                .frame(height: 35)
+////                                Image(systemName: "plus")
+////                                    .font(.title3)
+////                                    .frame(width: 30, height: 40)
 //                        }
 //                        .buttonStyle(.glassProminent)
 //                    }
 //                    
 //                }
-//                .padding(.horizontal)
+//                .padding()
 //            } else {
 //                // Fallback on earlier versions
 //            }
 //            
 //        }
         .sheet(isPresented: $showAddModal) {
-            NavigationView {
+            NavigationStack {
                 AddCountdownView()
                     .toolbar {
                         ToolbarItem(placement: .cancellationAction) {
@@ -175,6 +211,7 @@ struct ContentView: View {
                         }
 
                     }
+                    .presentationSizing(CustomPresentationSizing())
             }
             .interactiveDismissDisabled()
         }
@@ -204,6 +241,7 @@ struct ContentView: View {
                 ) {
                     store.fetchCountdowns()
                 }
+                .presentationSizing(CustomPresentationSizing())
 
             }
         }
@@ -215,6 +253,13 @@ struct ContentView: View {
         }
     }
 
+}
+
+// https://stackoverflow.com/a/79020867
+struct CustomPresentationSizing: PresentationSizing {
+    func proposedSize(for root: PresentationSizingRoot, context: PresentationSizingContext) -> ProposedViewSize {
+        .init(width: 500, height: 800)
+    }
 }
 
 #Preview {

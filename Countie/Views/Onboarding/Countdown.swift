@@ -10,7 +10,7 @@ import SwiftUI
 struct Countdown: View {
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
-            CountdownListItemView(item: CountdownItem.Graduation)
+            CountdownRow(item: CountdownItem.Graduation)
                 .padding()
                 .background(
                     .clear,

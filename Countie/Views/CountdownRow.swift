@@ -8,7 +8,7 @@
 internal import Combine
 import SwiftUI
 
-struct CountdownListItemView: View {
+struct CountdownRow: View {
 
     @AppStorage("showProgress") private var showProgress: Bool = true
     @State var item: CountdownItem
@@ -118,7 +118,7 @@ struct CountdownListItemView: View {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    CountdownListItemView(
+    CountdownRow(
         item: .Graduation
     )
     

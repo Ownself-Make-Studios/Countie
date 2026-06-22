@@ -35,7 +35,7 @@ struct SettingsView: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 //                VStack(spacing: 12) {
                 //                    Image("AppIcon")
