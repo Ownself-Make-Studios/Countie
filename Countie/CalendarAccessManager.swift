@@ -6,12 +6,13 @@
 //
 
 import EventKit
+import Foundation
 
 enum CalendarRecurrenceImportScope: String, Codable {
     case singleOccurrence
 }
 
-struct CalendarEventLinkDetails: Equatable {
+struct CalendarEventLinkDetails: Codable, Equatable {
     let eventIdentifier: String?
     let seriesIdentifier: String?
     let occurrenceDate: Date?

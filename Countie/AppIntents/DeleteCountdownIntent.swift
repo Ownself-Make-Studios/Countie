@@ -23,11 +23,7 @@ public struct DeleteCountdownIntent: AppIntent {
         }
 
         let context = NomaModelContainer.sharedModelContainer.mainContext
-        let descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate<CountdownItem> { item in
-                item.id == uuid && item.isDeleted == false
-            }
-        )
+        let descriptor = CountdownItem.activeDescriptor(id: uuid)
 
         guard let item = try context.fetch(descriptor).first else {
             return .result(dialog: "I couldn't find \(countdown.name).")

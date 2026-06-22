@@ -20,18 +20,8 @@ public struct ShowNextCountdownIntent: AppIntent {
 
     @MainActor
     private func nextCountdown() -> CountdownItem? {
-        let now = Date()
-        var descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate<CountdownItem> { item in
-                item.isDeleted == false && item.date >= now
-            },
-            sortBy: [
-                SortDescriptor(\CountdownItem.date, order: .forward)
-            ]
-        )
-        descriptor.fetchLimit = 1
-
         let context = NomaModelContainer.sharedModelContainer.mainContext
+        let descriptor = CountdownItem.upcomingDescriptor(limit: 1)
         return try? context.fetch(descriptor).first
     }
 

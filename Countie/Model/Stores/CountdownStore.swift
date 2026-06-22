@@ -22,7 +22,7 @@ class CountdownStore: ObservableObject {
     private var context: ModelContext
 
     private func normalizeAppearanceForAllCountdowns() {
-        let descriptor = FetchDescriptor<CountdownItem>()
+        let descriptor = CountdownItem.activeDescriptor()
         guard let items = try? context.fetch(descriptor) else { return }
 
         let didChange = items.reduce(false) { partialResult, item in
@@ -145,35 +145,12 @@ class CountdownStore: ObservableObject {
     }
 
     func fetchCalendarLinkedCountdowns() -> [CountdownItem]? {
-        let currentDate = Date()
-        let descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate<CountdownItem> {
-                $0.isDeleted == false
-                    && ($0.calendarEventIdentifier != nil || $0.calendarOccurrenceDate != nil)
-                    && $0.date >= currentDate
-            },
-            sortBy: [
-                SortDescriptor(\.date, order: .forward)
-            ]
-        )
-
-        let fetchedItems = try? context.fetch(descriptor)
-
-        return fetchedItems
+        try? context.fetch(CountdownItem.calendarLinkedUpcomingDescriptor())
     }
 
     func fetchCountdowns() {
         print("Fetching countdowns...")
-        let descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate { item in
-                item.isDeleted == false
-            },
-            sortBy: [
-                SortDescriptor(\.date, order: .forward)
-            ]
-        )
-
-        let fetchedItems = try? context.fetch(descriptor)
+        let fetchedItems = try? context.fetch(CountdownItem.activeDescriptor())
 
         countdowns = fetchedItems ?? []
         let didNormalize = countdowns.reduce(false) { partialResult, item in
@@ -190,17 +167,7 @@ class CountdownStore: ObservableObject {
     
     func fetchDeletedCountdowns() -> [CountdownItem]? {
         print("Fetching countdowns...")
-        let descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate { item in
-                item.isDeleted == true
-            },
-            sortBy: [
-                SortDescriptor(\.date, order: .forward)
-            ]
-        )
-
-        let fetchedItems = try? context.fetch(descriptor)
-        return fetchedItems ?? []
+        return (try? context.fetch(CountdownItem.deletedDescriptor())) ?? []
     }
 
     func deleteCountdown(_ countdown: CountdownItem) {

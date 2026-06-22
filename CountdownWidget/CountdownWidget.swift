@@ -93,20 +93,12 @@ struct Provider: AppIntentTimelineProvider {
     //        // Generate a list containing the contexts this widget is relevant in.
     //    }
     
-    static func predicate() -> Predicate<CountdownItem> {
-        let now = Date()
-        return #Predicate<CountdownItem> { $0.date >= now }
-    }
-    
     // Fetch a countdown by id
     @MainActor
     private func getCountdownItem(by id: String) -> CountdownItem? {
-        let uuid: UUID = UUID(uuidString: id)!
+        guard let uuid = UUID(uuidString: id) else { return nil }
         let modelContainer = NomaModelContainer.sharedModelContainer
-        let descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate<CountdownItem> { $0.id == uuid && !$0.isDeleted },
-            sortBy: [SortDescriptor(\CountdownItem.date, order: .forward)]
-        )
+        let descriptor = CountdownItem.activeDescriptor(id: uuid)
         let items = try? modelContainer.mainContext.fetch(descriptor)
         return items?.first
     }
@@ -115,11 +107,7 @@ struct Provider: AppIntentTimelineProvider {
     @MainActor
     private func getLatestActiveCountdown() -> CountdownItem? {
         let modelContainer = NomaModelContainer.sharedModelContainer
-        let now = Date()
-        let descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate<CountdownItem> { $0.date >= now && !$0.isDeleted },
-            sortBy: [SortDescriptor(\CountdownItem.date, order: .forward)]
-        )
+        let descriptor = CountdownItem.upcomingDescriptor()
         let items = try? modelContainer.mainContext.fetch(descriptor)
         return items?.first
     }

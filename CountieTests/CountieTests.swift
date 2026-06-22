@@ -6,10 +6,87 @@
 //
 
 import Foundation
+import SwiftData
 import Testing
 @testable import Countie
 
 struct CountieTests {
+    @Test func appearanceNormalizesInvalidValues() async throws {
+        let appearance = CountdownAppearance(
+            iconName: "not-a-symbol",
+            colorRawValue: "not-a-color"
+        )
+
+        #expect(appearance.resolvedIconName == CountdownEventIcon.default)
+        #expect(appearance.eventColor == .blue)
+        #expect(appearance.normalized == .default)
+    }
+
+    @Test func appearanceRoundTripsThroughCodable() async throws {
+        let appearance = CountdownAppearance(
+            iconName: "sparkles",
+            colorRawValue: CountdownEventColor.purple.rawValue
+        )
+
+        let data = try JSONEncoder().encode(appearance)
+        let decoded = try JSONDecoder().decode(CountdownAppearance.self, from: data)
+
+        #expect(decoded == appearance)
+    }
+
+    @Test func calendarLinkDetailsRoundTripsThroughCodable() async throws {
+        let details = CalendarEventLinkDetails(
+            eventIdentifier: "event-1",
+            seriesIdentifier: "series-1",
+            occurrenceDate: Date(timeIntervalSince1970: 1_713_960_000),
+            importScope: .singleOccurrence
+        )
+
+        let data = try JSONEncoder().encode(details)
+        let decoded = try JSONDecoder().decode(CalendarEventLinkDetails.self, from: data)
+
+        #expect(decoded == details)
+    }
+
+    @MainActor
+    @Test func softDeleteDescriptorsSeparateActiveAndDeletedCountdowns() async throws {
+        let context = try Self.inMemoryContext()
+        let active = CountdownItem(
+            name: "Active",
+            includeTime: false,
+            date: Date.now.addingTimeInterval(60)
+        )
+        let deleted = CountdownItem(
+            name: "Deleted",
+            includeTime: false,
+            date: Date.now.addingTimeInterval(120)
+        )
+        deleted.isDeleted = true
+
+        context.insert(active)
+        context.insert(deleted)
+        try context.save()
+
+        let activeItems = try context.fetch(CountdownItem.activeDescriptor())
+        let deletedItems = try context.fetch(CountdownItem.deletedDescriptor())
+
+        #expect(activeItems.map(\.id) == [active.id])
+        #expect(deletedItems.map(\.id) == [deleted.id])
+    }
+
+    @Test func reminderDraftsSortByOffsetThenTitle() async throws {
+        let countdown = CountdownItem(
+            name: "Launch",
+            includeTime: true,
+            date: Date.now.addingTimeInterval(3600)
+        )
+        let laterReminder = CountdownReminder(secondsBeforeEvent: 600, customLabel: "B")
+        let firstReminder = CountdownReminder(secondsBeforeEvent: 60, customLabel: "First")
+        let alphaReminder = CountdownReminder(secondsBeforeEvent: 600, customLabel: "A")
+        countdown.reminders = [laterReminder, firstReminder, alphaReminder]
+
+        #expect(countdown.reminderDrafts.map(\.title) == ["First", "A", "B"])
+    }
 
     @Test func recurringOccurrenceMatchesEvenWhenIdentifierChanges() async throws {
         let occurrenceDate = Date(timeIntervalSince1970: 1_713_960_000)
@@ -105,6 +182,17 @@ struct CountieTests {
         }
 
         #expect(sorted.map(\.eventIdentifier) == ["all-day", "timed"])
+    }
+
+    @MainActor
+    private static func inMemoryContext() throws -> ModelContext {
+        let schema = Schema([
+            CountdownItem.self,
+            CountdownReminder.self,
+        ])
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: schema, configurations: [configuration])
+        return container.mainContext
     }
 
 }

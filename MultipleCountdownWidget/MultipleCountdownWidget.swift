@@ -71,14 +71,10 @@ struct Provider: AppIntentTimelineProvider {
         
         let modelContainer = NomaModelContainer.sharedModelContainer
         
-        let now = Date()
-        
-        var descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate<CountdownItem> { $0.date >= now && $0.isDeleted == false },
-            sortBy: [SortDescriptor(\CountdownItem.date, order: .forward)],
+        let descriptor = CountdownItem.upcomingDescriptor(
+            since: Date(),
+            limit: count
         )
-        
-        descriptor.fetchLimit = count
         
         do {
             let items = try modelContainer.mainContext.fetch(descriptor)

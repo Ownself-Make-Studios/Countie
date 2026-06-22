@@ -75,17 +75,8 @@ public struct CountdownEntityQuery: EntityStringQuery {
 
     @MainActor
     private func fetchCountdownEntities(includePast: Bool) async -> [CountdownEntity] {
-        let now = Date()
-        let descriptor = FetchDescriptor<CountdownItem>(
-            predicate: #Predicate<CountdownItem> { item in
-                item.isDeleted == false && (includePast || item.date >= now)
-            },
-            sortBy: [
-                SortDescriptor(\CountdownItem.date, order: .forward)
-            ]
-        )
-
         let container = NomaModelContainer.sharedModelContainer
+        let descriptor = CountdownItem.appEntityDescriptor(includePast: includePast)
         let items = (try? container.mainContext.fetch(descriptor)) ?? []
         return items.map { CountdownEntity(item: $0) }
     }
