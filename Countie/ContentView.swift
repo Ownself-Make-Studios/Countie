@@ -104,30 +104,39 @@ struct ContentView: View {
                 }
 
                 ToolbarItemGroup(placement: .topBarTrailing) {
-                    Menu {
-                        Button(action: {
-                            showCalendarModal = true
-                        }) {
-                            Label(
-                                "Add from calendar",
-                                systemImage: "calendar.badge.plus"
-                            )
-                            .labelStyle(.titleAndIcon)
-                        }
-                        .disabled(true)
-
-                        Button(action: {
+                    
+                    Button(action: {
                             showAddModal = true
                         }) {
-                            Label("Add Manually", systemImage: "square.and.pencil")
-                                .labelStyle(.titleAndIcon)
-                        }
-
-                    } label: {
-                        Label("Add Countdown", systemImage: "plus")
+                            Label("Add Countdown", systemImage: "plus")
                             .labelStyle(.titleAndIcon)
-                    }
-                    .buttonStyle(.borderedProminent)
+                        }
+                        .buttonStyle(.borderedProminent)
+
+//                    Menu {
+//                        Button(action: {
+//                            showCalendarModal = true
+//                        }) {
+//                            Label(
+//                                "Add from calendar",
+//                                systemImage: "calendar.badge.plus"
+//                            )
+//                            .labelStyle(.titleAndIcon)
+//                        }
+//                        .disabled(true)
+//
+//                        Button(action: {
+//                            showAddModal = true
+//                        }) {
+//                            Label("Add Manually", systemImage: "square.and.pencil")
+//                                .labelStyle(.titleAndIcon)
+//                        }
+//
+//                    } label: {
+//                        Label("Add Countdown", systemImage: "plus")
+//                            .labelStyle(.titleAndIcon)
+//                    }
+//                    .buttonStyle(.borderedProminent)
                 }
 
             }
