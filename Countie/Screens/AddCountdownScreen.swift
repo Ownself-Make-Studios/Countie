@@ -233,7 +233,7 @@ private struct CountdownSettingsSection: View {
 }
 
 struct AddCountdownView: View {
-    @EnvironmentObject private var store: CountdownStore
+    @EnvironmentObject private var countdownStore: CountdownStore
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
@@ -381,7 +381,7 @@ struct AddCountdownView: View {
         }
 
         WidgetCenter.shared.reloadAllTimelines()
-        store.fetchCountdowns()
+        countdownStore.fetchCountdowns()
         dismiss()
         onAdd?()
     }

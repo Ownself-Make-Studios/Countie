@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CountdownListView: View {
-    @EnvironmentObject private var modalStore: ModalStore
+    @EnvironmentObject private var sheetStore: SheetStore
 
     let countdowns: [CountdownItem]
     let onClose: (() -> Void)?
@@ -71,7 +71,7 @@ struct CountdownListView: View {
     }
 
     private func selectCountdown(_ countdown: CountdownItem) {
-        modalStore.isSelectedCountdown = countdown
+        sheetStore.isSelectedCountdown = countdown
     }
 }
 
@@ -140,5 +140,5 @@ private struct EmptyCountdownMonthRow: View {
             CountdownItem.SampleFutureTimer,
         ],
     )
-    .environmentObject(ModalStore())
+    .environmentObject(SheetStore())
 }

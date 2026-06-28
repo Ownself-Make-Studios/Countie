@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct PastCountdownsView: View {
-    @EnvironmentObject private var store: CountdownStore
+    @EnvironmentObject private var countdownStore: CountdownStore
     var onClose: (() -> Void)? = nil
     
     var body: some View {
-        if store.passedCountdowns.isEmpty {
+        if countdownStore.passedCountdowns.isEmpty {
             Spacer(minLength: 0)
             ContentUnavailableView(
                 "No Past Countdowns",
@@ -24,11 +24,11 @@ struct PastCountdownsView: View {
             Spacer(minLength: 0)
         } else {
             CountdownListView(
-                countdowns: store.passedCountdowns,
+                countdowns: countdownStore.passedCountdowns,
                 onClose: onClose
             )
             .refreshable {
-                store.fetchCountdowns()
+                countdownStore.fetchCountdowns()
             }
         }
 

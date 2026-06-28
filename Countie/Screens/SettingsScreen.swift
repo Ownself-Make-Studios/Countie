@@ -17,7 +17,7 @@ enum ChangeCountdownWhenCalendarEventChangedOption: String, CaseIterable, Identi
 }
 
 struct SettingsView: View {
-    @EnvironmentObject var store: CountdownStore
+    @EnvironmentObject var countdownStore: CountdownStore
     @State private var deletedCountdowns: [CountdownItem] = []
     @State private var showOnboarding = false
     
@@ -120,7 +120,7 @@ struct SettingsView: View {
         }
         .task{
             // Load deleted countdowns from the store
-            if let countdowns = store.fetchDeletedCountdowns(){
+            if let countdowns = countdownStore.fetchDeletedCountdowns(){
                 deletedCountdowns = countdowns
             }
         }

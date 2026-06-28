@@ -9,7 +9,7 @@ import SwiftUI
 import ConfettiSwiftUI
 
 struct CountdownDetailView: View {
-    @EnvironmentObject private var store: CountdownStore
+    @EnvironmentObject private var countdownStore: CountdownStore
     @Environment(\.dismiss) private var dismiss
 
     private let countdown: CountdownItem
@@ -121,7 +121,7 @@ struct CountdownDetailView: View {
     }
 
     private func deleteCountdown() {
-        store.deleteCountdown(countdown)
+        countdownStore.deleteCountdown(countdown)
         onClose?()
         close()
     }

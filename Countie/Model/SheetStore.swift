@@ -8,6 +8,6 @@
 import Foundation
 internal import Combine
 
-class ModalStore: ObservableObject {
+class SheetStore: ObservableObject {
     @Published var isSelectedCountdown: CountdownItem? = nil
 }

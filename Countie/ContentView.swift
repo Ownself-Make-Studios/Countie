@@ -10,8 +10,8 @@ import SwiftUI
 import WidgetKit
 
 struct ContentView: View {
-    @EnvironmentObject var store: CountdownStore
-    @EnvironmentObject var modalStore: ModalStore
+    @EnvironmentObject var countdownStore: CountdownStore
+    @EnvironmentObject var sheetStore: SheetStore
 
     @Environment(\.modelContext) private var modelContext
     @State private var countdowns: [CountdownItem] = []
@@ -21,14 +21,14 @@ struct ContentView: View {
     //    @State private var selectedTab: Tabs = .comingup
 
     private func onCloseModal() {
-        store.fetchCountdowns()
+        countdownStore.fetchCountdowns()
     }
 
     var body: some View {
         NavigationStack {
             VStack {
 
-                if store.upcomingCountdowns.isEmpty {
+                if countdownStore.upcomingCountdowns.isEmpty {
                     Spacer(minLength: 0)
                     ContentUnavailableView(
                         "No Countdowns Yet :(",
@@ -40,10 +40,10 @@ struct ContentView: View {
                     Spacer(minLength: 0)
                 } else {
                     CountdownListView(
-                        countdowns: store.upcomingCountdowns,
+                        countdowns: countdownStore.upcomingCountdowns,
                         onClose: onCloseModal,
                     ).refreshable {
-                        store.fetchCountdowns()
+                        countdownStore.fetchCountdowns()
                     }
                 }
 
@@ -221,7 +221,7 @@ struct ContentView: View {
                     onSelectEvent: { _ in
                         showAddModal = false
                         showCalendarModal = false
-                        store.fetchCountdowns()
+                        countdownStore.fetchCountdowns()
                     }
                 )
                 .toolbar {
@@ -234,12 +234,12 @@ struct ContentView: View {
                 }
             }
         }
-        .sheet(item: $modalStore.isSelectedCountdown) { countdown in
+        .sheet(item: $sheetStore.isSelectedCountdown) { countdown in
             NavigationView {
                 CountdownDetailView(
                     countdown: countdown,
                 ) {
-                    store.fetchCountdowns()
+                    countdownStore.fetchCountdowns()
                 }
                 .presentationSizing(CustomPresentationSizing())
 
@@ -248,7 +248,7 @@ struct ContentView: View {
         .onChange(of: showAddModal) { oldValue, newValue in
             if oldValue != newValue && newValue == false {
                 // AddCountdownView was dismissed
-                store.fetchCountdowns()
+                countdownStore.fetchCountdowns()
             }
         }
     }
@@ -268,5 +268,5 @@ struct CustomPresentationSizing: PresentationSizing {
     ContentView()
         .modelContainer(container)
         .environmentObject(store)
-        .environmentObject(ModalStore())
+        .environmentObject(SheetStore())
 }

@@ -12,13 +12,13 @@ import WidgetKit
 @main
 struct CountieApp: App {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-    @StateObject private var store: CountdownStore
-    @StateObject private var modalStore: ModalStore
+    @StateObject private var countdownStore: CountdownStore
+    @StateObject private var sheetStore: SheetStore
     @Environment(\.scenePhase) private var scenePhase
     
     init() {
-        _store = StateObject(wrappedValue: CountdownStore(context: CountieModelContainer.sharedModelContainer.mainContext))
-        _modalStore = StateObject(wrappedValue: ModalStore())
+        _countdownStore = StateObject(wrappedValue: CountdownStore(context: CountieModelContainer.sharedModelContainer.mainContext))
+        _sheetStore = StateObject(wrappedValue: SheetStore())
     }
     
     var body: some Scene {
@@ -32,10 +32,10 @@ struct CountieApp: App {
                     }
                 }
             }
-            .environmentObject(store)
-            .environmentObject(modalStore)
+            .environmentObject(countdownStore)
+            .environmentObject(sheetStore)
             .onAppear{
-                store.fetchCountdowns()
+                countdownStore.fetchCountdowns()
                 openPendingCountdownIfNeeded()
             }
             .onOpenURL { url in
@@ -45,7 +45,7 @@ struct CountieApp: App {
         }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
-                store.syncCountdownsWithEvents()
+                countdownStore.syncCountdownsWithEvents()
                 openPendingCountdownIfNeeded()
             }
         }
@@ -76,10 +76,10 @@ struct CountieApp: App {
 
     private func openCountdown(id: UUID) {
         print("Opening countdown \(id.uuidString)")
-        store.fetchCountdowns()
+        countdownStore.fetchCountdowns()
         
-        if let countdown = store.countdowns.first(where: { $0.id == id }) {
-            modalStore.isSelectedCountdown = countdown
+        if let countdown = countdownStore.countdowns.first(where: { $0.id == id }) {
+            sheetStore.isSelectedCountdown = countdown
             return;
         }
         
