@@ -26,8 +26,6 @@ public struct CreateCountdownIntent: AppIntent {
     )
     public var date: Date
 
-    @Parameter(title: "Include Time", default: true)
-    public var includeTime: Bool
 
     public static var parameterSummary: some ParameterSummary {
         Summary("Create \(\.$name) for \(\.$date)")
@@ -42,19 +40,14 @@ public struct CreateCountdownIntent: AppIntent {
             throw $name.needsValueError("What should the countdown be called?")
         }
 
-        let normalizedDate = includeTime
-            ? date
-            : Calendar.current.startOfDay(for: date)
-
         let item = CountdownItem(
             name: trimmedName,
-            includeTime: includeTime,
-            date: normalizedDate,
+            date: date,
             iconName: CountdownEventIcon.default,
-            colorNameRaw: CountdownEventColor.blue.rawValue
+            color: .blue
         )
 
-        let context = NomaModelContainer.sharedModelContainer.mainContext
+        let context = CountieModelContainer.sharedModelContainer.mainContext
         context.insert(item)
         try context.save()
 

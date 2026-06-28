@@ -20,7 +20,7 @@ public struct ShowNextCountdownIntent: AppIntent {
 
     @MainActor
     private func nextCountdown() -> CountdownItem? {
-        let context = NomaModelContainer.sharedModelContainer.mainContext
+        let context = CountieModelContainer.sharedModelContainer.mainContext
         let descriptor = CountdownItem.upcomingDescriptor(limit: 1)
         return try? context.fetch(descriptor).first
     }

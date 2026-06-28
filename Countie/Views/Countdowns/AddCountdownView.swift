@@ -7,8 +7,8 @@
 
 import EventKit
 import SwiftUI
-import WidgetKit
 import SwiftData
+import WidgetKit
 
 private struct IconPickerSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -78,84 +78,16 @@ private struct IconPickerSheet: View {
     }
 }
 
-private struct CustomReminderSheet: View {
-    @Environment(\.dismiss) private var dismiss
-
-    let eventDate: Date
-    let onSave: (CountdownReminderDraft) -> Void
-
-    @State private var reminderDate: Date
-
-    init(eventDate: Date, onSave: @escaping (CountdownReminderDraft) -> Void) {
-        self.eventDate = eventDate
-        self.onSave = onSave
-
-        let minimumDate = Date.now
-        let proposedDate = minimumDate.addingTimeInterval(5 * 60)
-        _reminderDate = State(initialValue: min(eventDate, proposedDate))
-    }
-
-    private var boundedReminderDate: Date {
-        min(max(reminderDate, Date.now), eventDate)
-    }
-
-    private var secondsBeforeEvent: Int {
-        max(Int(eventDate.timeIntervalSince(boundedReminderDate)), 0)
-    }
-
-    private var draft: CountdownReminderDraft {
-        CountdownReminderDraft(
-            secondsBeforeEvent: secondsBeforeEvent,
-            customLabel: CountdownReminderDraft.fallbackLabel(for: secondsBeforeEvent)
-        )
-    }
-
-    var body: some View {
-        NavigationStack {
-            Form {
-                DatePicker(
-                    "Reminder Date & Time",
-                    selection: $reminderDate,
-                    in: Date.now...eventDate,
-                    displayedComponents: [.date, .hourAndMinute]
-                )
-
-                Text(draft.title)
-                    .foregroundStyle(.secondary)
-            }
-            .navigationTitle("Custom Reminder")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
-                        onSave(draft)
-                        dismiss()
-                    }
-                }
-            }
-        }
-        .onChange(of: reminderDate) { _, newValue in
-            reminderDate = min(max(newValue, Date.now), eventDate)
-        }
-    }
-}
-
 private struct CountdownPreviewSection: View {
     let iconName: String
-    let color: CountdownEventColor
+    let color: Color
 
     var body: some View {
         HStack {
             Spacer()
             CircularEventIconView(
                 iconName: iconName,
-                tint: color.color,
+                tint: color,
                 progress: 0.75,
                 showProgress: false,
                 width: 100,
@@ -216,15 +148,8 @@ private struct AppearanceSection: View {
                                 .fill(option.color)
                                 .frame(width: 34, height: 34)
                                 .overlay {
-                                    if color == option {
-                                        Image(systemName: "checkmark")
-                                            .font(.caption.weight(.bold))
-                                            .foregroundStyle(.white)
-                                    }
-                                }
-                                .overlay {
                                     Circle()
-                                        .strokeBorder(Color.primary.opacity(color == option ? 0 : 0.12), lineWidth: 1)
+                                        .strokeBorder(Color.primary.opacity(0.12), lineWidth: 1)
                                 }
                         }
                         .buttonStyle(.plain)
@@ -273,71 +198,36 @@ private struct LinkedCalendarEventSection: View {
 }
 
 private struct CountdownSettingsSection: View {
-    @Binding var hasTime: Bool
     @Binding var countdownDate: Date
     @Binding var countSinceDate: Date
 
     let isDateEditingDisabled: Bool
 
     var body: some View {
-        Section("Countdown Details") {
-            Toggle("Include Time of day", isOn: $hasTime)
-                .disabled(isDateEditingDisabled)
-
+        Section("Date & Time") {
             DatePicker(
-                "Countdown End Date\(hasTime ? " & Time" : "")",
+                "Date & Time",
                 selection: $countdownDate,
                 in: Date.now...,
-                displayedComponents: hasTime
-                    ? [.date, .hourAndMinute] : [.date]
+                displayedComponents: [.date, .hourAndMinute],
             )
+            .datePickerStyle(.graphical)
             .disabled(isDateEditingDisabled)
 
-            VStack(alignment: .leading, spacing: 10) {
-                DatePicker(
-                    "Countdown Start Date\(hasTime ? " & Time" : "")",
-                    selection: $countSinceDate,
-                    in: ...countdownDate,
-                    displayedComponents: hasTime
-                        ? [.date, .hourAndMinute] : [.date]
-                )
-
-                Text("Progress starts from this date.")
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
-                    .multilineTextAlignment(.leading)
-            }
-        }
-    }
-}
-
-private struct ReminderSection: View {
-    let reminderDrafts: [CountdownReminderDraft]
-    let availablePresets: [CountdownReminderPreset]
-    let onDelete: (IndexSet) -> Void
-    let onTogglePreset: (CountdownReminderPreset) -> Void
-    let onShowCustomReminder: () -> Void
-
-    var body: some View {
-        Section("Remind Me") {
-            ForEach(reminderDrafts) { reminder in
-                Text(reminder.title)
-            }
-            .onDelete(perform: onDelete)
-
-            Menu {
-                ForEach(availablePresets) { preset in
-                    Button(preset.title) {
-                        onTogglePreset(preset)
-                    }
-                }
-
-                Divider()
-
-                Button("Custom...", action: onShowCustomReminder)
-            } label: {
-                Label("Add", systemImage: "plus")
-            }
+//            VStack(alignment: .leading, spacing: 10) {
+//                DatePicker(
+//                    "Countdown Start Date",
+//                    selection: $countSinceDate,
+//                    in: ...countdownDate,
+//                    displayedComponents:
+//                        [.date, .hourAndMinute]
+//                )
+//
+//                Text("Progress starts from this date.")
+//                    .font(.footnote)
+//                    .foregroundColor(.secondary)
+//                    .multilineTextAlignment(.leading)
+//            }
         }
     }
 }
@@ -350,18 +240,14 @@ struct AddCountdownView: View {
     private let onAdd: (() -> Void)?
     private let countdownToEdit: CountdownItem?
 
-    @State private var iconName = CountdownEventIcon.default
-    @State private var color: CountdownEventColor = .blue
-    @State private var name = ""
-    @State private var countdownDate: Date = Calendar.current.startOfDay(for: Date.now)
-        .addingTimeInterval(7 * 24 * 60 * 60)
-    @State private var countSinceDate = Date.now
-    @State private var hasTime = true
-    @State private var reminderDrafts: [CountdownReminderDraft] = []
+    @State private var iconName: String
+    @State private var color: CountdownEventColor
+    @State private var name: String
+    @State private var countdownDate: Date
+    @State private var countSinceDate: Date
+    @State private var linkedEvent: EKEvent?
 
     @State private var showIconPicker = false
-    @State private var linkedEvent: EKEvent? = nil
-    @State private var showCustomReminderSheet = false
 
     private var isSubmitDisabled: Bool {
         name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -375,30 +261,54 @@ struct AddCountdownView: View {
         countdownToEdit == nil ? "Add" : "Save"
     }
 
-    private var availablePresets: [CountdownReminderPreset] {
-        CountdownReminderPreset.allCases.filter { preset in
-            !reminderDrafts.contains(where: { $0.secondsBeforeEvent == preset.secondsBeforeEvent })
-        }
+    private var isDateEditingDisabled: Bool {
+        linkedEvent != nil
     }
 
     init(countdownToEdit: CountdownItem? = nil, onAdd: (() -> Void)? = nil) {
-        self.countdownToEdit = countdownToEdit
         self.onAdd = onAdd
+        self.countdownToEdit = countdownToEdit
+
+        if let countdownToEdit {
+            var resolvedLinkedEvent: EKEvent?
+            if countdownToEdit.calendarEventIdentifier != nil
+                || countdownToEdit.calendarOccurrenceDate != nil {
+                resolvedLinkedEvent = CalendarAccessManager.resolveEvent(for: countdownToEdit)
+            }
+
+            _iconName = State(initialValue: countdownToEdit.resolvedIconName)
+            _color = State(initialValue: countdownToEdit.color)
+            _name = State(initialValue: countdownToEdit.name)
+            _countdownDate = State(initialValue: countdownToEdit.date)
+            _countSinceDate = State(initialValue: countdownToEdit.countSince)
+            _linkedEvent = State(initialValue: resolvedLinkedEvent)
+        } else {
+            _iconName = State(initialValue: CountdownEventIcon.default)
+            _color = State(initialValue: .blue)
+            _name = State(initialValue: "")
+            _countdownDate = State(
+                initialValue: Calendar.current.startOfDay(for: Date.now)
+                    .addingTimeInterval(7 * 24 * 60 * 60)
+            )
+            _countSinceDate = State(initialValue: Date.now)
+            _linkedEvent = State(initialValue: nil)
+        }
     }
 
     init(
         name: String = "",
         countdownDate: Date = Calendar.current.startOfDay(for: Date.now),
-        hasTime: Bool = false,
         linkedEvent: EKEvent? = nil,
         onAdd: (() -> Void)? = nil
     ) {
-        _name = .init(initialValue: name)
-        _countdownDate = .init(initialValue: countdownDate)
-        _hasTime = .init(initialValue: hasTime)
-        _linkedEvent = .init(initialValue: linkedEvent)
-        self.countdownToEdit = nil
         self.onAdd = onAdd
+        self.countdownToEdit = nil
+        _iconName = State(initialValue: CountdownEventIcon.default)
+        _color = State(initialValue: .blue)
+        _name = State(initialValue: name)
+        _countdownDate = State(initialValue: countdownDate)
+        _countSinceDate = State(initialValue: Date.now)
+        _linkedEvent = State(initialValue: linkedEvent)
     }
 
     var body: some View {
@@ -424,19 +334,11 @@ struct AddCountdownView: View {
                 }
 
                 CountdownSettingsSection(
-                    hasTime: $hasTime,
                     countdownDate: $countdownDate,
                     countSinceDate: $countSinceDate,
-                    isDateEditingDisabled: linkedEvent != nil
+                    isDateEditingDisabled: isDateEditingDisabled
                 )
 
-                ReminderSection(
-                    reminderDrafts: reminderDrafts,
-                    availablePresets: availablePresets,
-                    onDelete: deleteReminders,
-                    onTogglePreset: togglePreset,
-                    onShowCustomReminder: presentCustomReminderSheet
-                )
             }
             .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
@@ -447,121 +349,41 @@ struct AddCountdownView: View {
                 }
             }
         }
-        .sheet(isPresented: $showCustomReminderSheet) {
-            CustomReminderSheet(eventDate: countdownDate) { draft in
-                addCustomReminder(draft)
-            }
-        }
         .sheet(isPresented: $showIconPicker) {
             IconPickerSheet(selectedIconName: $iconName)
-        }
-        .onAppear(perform: loadInitialState)
-        .onChange(of: hasTime) { _, newValue in
-            handleTimeVisibilityChange(newValue)
         }
     }
 
     private func handleSaveItem() {
-        let normalizedCountdownDate = hasTime
-            ? countdownDate
-            : Calendar.current.startOfDay(for: countdownDate)
-        let normalizedCountSinceDate = hasTime
-            ? countSinceDate
-            : Calendar.current.startOfDay(for: countSinceDate)
-
-        let normalizedReminders = reminderDrafts
-            .filter { $0.secondsBeforeEvent >= 0 }
-            .uniqued(by: \.secondsBeforeEvent)
-            .sorted { $0.secondsBeforeEvent < $1.secondsBeforeEvent }
-
-        let savedItem: CountdownItem
-
         if let editing = countdownToEdit {
             editing.iconName = iconName
-            editing.eventColor = color
+            editing.color = color
             editing.name = name
-            editing.includeTime = hasTime
-            editing.date = normalizedCountdownDate
-            editing.countSince = normalizedCountSinceDate
+            editing.date = countdownDate
+            editing.countSince = countSinceDate
 
             applyLinkedEventMetadata(from: linkedEvent, to: editing)
 
-            replaceReminders(for: editing, with: normalizedReminders)
             try? modelContext.save()
-            savedItem = editing
         } else {
-            let item: CountdownItem = CountdownItem(
+            let item = CountdownItem(
                 name: name,
-                includeTime: hasTime,
-                date: normalizedCountdownDate,
+                date: countdownDate,
                 iconName: iconName,
-                colorNameRaw: color.rawValue
+                color: color
             )
-            item.countSince = normalizedCountSinceDate
+            item.countSince = countSinceDate
 
             applyLinkedEventMetadata(from: linkedEvent, to: item)
 
             modelContext.insert(item)
-            replaceReminders(for: item, with: normalizedReminders)
             try? modelContext.save()
-            savedItem = item
-        }
-
-        let reminderRequests = CountdownReminderScheduler.snapshot(for: savedItem)
-        let countdownID = savedItem.id
-        let countdownName = savedItem.name
-        let eventDate = savedItem.date
-        Task {
-            await CountdownReminderScheduler.syncNotifications(
-                countdownID: countdownID,
-                countdownName: countdownName,
-                eventDate: eventDate,
-                reminders: reminderRequests
-            )
         }
 
         WidgetCenter.shared.reloadAllTimelines()
         store.fetchCountdowns()
         dismiss()
         onAdd?()
-    }
-
-    private func replaceReminders(for item: CountdownItem, with drafts: [CountdownReminderDraft]) {
-        for existingReminder in item.reminders {
-            modelContext.delete(existingReminder)
-        }
-        item.reminders.removeAll()
-
-        for draft in drafts {
-            let reminder = CountdownReminder(
-                secondsBeforeEvent: draft.secondsBeforeEvent,
-                customLabel: draft.customLabel
-            )
-            reminder.countdown = item
-            modelContext.insert(reminder)
-            item.reminders.append(reminder)
-        }
-    }
-
-    private func togglePreset(_ preset: CountdownReminderPreset) {
-        if let index = reminderDrafts.firstIndex(where: { $0.secondsBeforeEvent == preset.secondsBeforeEvent }) {
-            reminderDrafts.remove(at: index)
-        } else {
-            reminderDrafts.append(
-                CountdownReminderDraft(
-                    secondsBeforeEvent: preset.secondsBeforeEvent,
-                    customLabel: nil
-                )
-            )
-        }
-
-        reminderDrafts.sort { $0.secondsBeforeEvent < $1.secondsBeforeEvent }
-    }
-
-    private func addCustomReminder(_ draft: CountdownReminderDraft) {
-        guard !reminderDrafts.contains(where: { $0.secondsBeforeEvent == draft.secondsBeforeEvent }) else { return }
-        reminderDrafts.append(draft)
-        reminderDrafts.sort { $0.secondsBeforeEvent < $1.secondsBeforeEvent }
     }
 
     private func applyLinkedEventMetadata(
@@ -587,69 +409,13 @@ struct AddCountdownView: View {
         showIconPicker = true
     }
 
-    private func presentCustomReminderSheet() {
-        showCustomReminderSheet = true
-    }
-
-    private func deleteReminders(at offsets: IndexSet) {
-        reminderDrafts.remove(atOffsets: offsets)
-    }
-
     private func unlinkEvent() {
         linkedEvent = nil
     }
 
-    private func loadInitialState() {
-        if let editing = countdownToEdit {
-            editing.normalizeAppearance()
-            iconName = editing.resolvedIconName
-            color = editing.eventColor
-            name = editing.name
-            hasTime = editing.includeTime
-            countdownDate = editing.date
-            countSinceDate = editing.countSince
-            reminderDrafts = editing.reminderDrafts
-
-            if editing.calendarEventIdentifier != nil
-                || editing.calendarOccurrenceDate != nil {
-                linkedEvent = CalendarAccessManager.resolveEvent(for: editing)
-            }
-        } else {
-            iconName = CountdownEventIcon.default
-            color = .blue
-        }
-    }
-
-    private func handleTimeVisibilityChange(_ includesTime: Bool) {
-        guard !includesTime else { return }
-        countdownDate = Calendar.current.startOfDay(for: countdownDate)
-    }
 }
 
 #Preview {
     AddCountdownView()
         .modelContainer(for: CountdownItem.self, inMemory: true)
-        .modelContainer(for: CountdownReminder.self, inMemory: true)
-}
-
-private extension Array {
-    func uniqued<Value: Hashable>(by keyPath: KeyPath<Element, Value>) -> [Element] {
-        var seen: Set<Value> = []
-        return filter { seen.insert($0[keyPath: keyPath]).inserted }
-    }
-}
-
-
-
-struct InputDemo: View {
-    @State private var text = ""
-    var body: some View {
-        VStack {
-            TextField("Type here", text: $text)
-                .textFieldStyle(.roundedBorder)
-                .padding()
-            Text("You typed: \(text)")
-        }
-        .padding()
-    }
 }

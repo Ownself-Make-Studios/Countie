@@ -263,9 +263,9 @@ struct CustomPresentationSizing: PresentationSizing {
 }
 
 #Preview {
-    let container = NomaModelContainer.sharedModelContainer
+    let container = CountieModelContainer.sharedModelContainer
     let store = CountdownStore(context: container.mainContext)
-    return ContentView()
+    ContentView()
         .modelContainer(container)
         .environmentObject(store)
         .environmentObject(ModalStore())

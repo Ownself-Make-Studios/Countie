@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 final class CountdownItem {
@@ -11,50 +12,54 @@ final class CountdownItem {
     )
 
     @Attribute(.unique) var id: UUID = UUID()
-    var appearance: CountdownAppearance
     var name: String
-    var includeTime: Bool = false
     var date: Date
     var isDeleted: Bool = false
     var createdAt: Date = Date.now
     var countSince: Date = Date.now
+    var iconName: String = CountdownEventIcon.default
+    
+    var color: CountdownEventColor = CountdownEventColor.blue
+    
     var calendarEventIdentifier: String?
     var calendarSeriesIdentifier: String?
     var calendarOccurrenceDate: Date?
     var calendarRecurrenceImportScopeRaw: String?
 
-    @Relationship(deleteRule: .cascade, inverse: \CountdownReminder.countdown)
-    var reminders: [CountdownReminder] = []
-
     init(
         name: String,
-        includeTime: Bool,
         date: Date,
         iconName: String = CountdownEventIcon.default,
-        colorNameRaw: String = CountdownEventColor.blue.rawValue,
+        color: CountdownEventColor = CountdownEventColor.blue,
         calendarEventIdentifier: String? = nil
     ) {
-        self.appearance = CountdownAppearance(iconName: iconName, colorRawValue: colorNameRaw)
         self.name = name
-        self.includeTime = includeTime
         self.date = date
+        self.iconName = iconName
+        self.color = color
         self.calendarEventIdentifier = calendarEventIdentifier
     }
 
     convenience init(
         name: String,
-        includeTime: Bool,
         date: Date,
         calendarEventIdentifier: String? = nil
     ) {
         self.init(
             name: name,
-            includeTime: includeTime,
             date: date,
             iconName: CountdownEventIcon.default,
-            colorNameRaw: CountdownEventColor.blue.rawValue,
+            color: .blue,
             calendarEventIdentifier: calendarEventIdentifier
         )
+    }
+
+    var resolvedIconName: String {
+        CountdownEventIcon.allSymbols.contains(iconName) ? iconName : CountdownEventIcon.default
+    }
+
+    var eventTintColor: Color {
+        color.color
     }
 
     var calendarRecurrenceImportScope: CalendarRecurrenceImportScope? {
@@ -84,14 +89,63 @@ final class CountdownItem {
         }
     }
 
-    var reminderDrafts: [CountdownReminderDraft] {
-        reminders
-            .map(CountdownReminderDraft.fromModel)
-            .sorted { lhs, rhs in
-                if lhs.secondsBeforeEvent == rhs.secondsBeforeEvent {
-                    return lhs.title < rhs.title
-                }
-                return lhs.secondsBeforeEvent < rhs.secondsBeforeEvent
-            }
+    static func activeDescriptor() -> FetchDescriptor<CountdownItem> {
+        FetchDescriptor<CountdownItem>(
+            predicate: #Predicate<CountdownItem> { item in
+                item.isDeleted == false
+            },
+            sortBy: [SortDescriptor(\.date, order: .forward)]
+        )
+    }
+
+    static func deletedDescriptor() -> FetchDescriptor<CountdownItem> {
+        FetchDescriptor<CountdownItem>(
+            predicate: #Predicate<CountdownItem> { item in
+                item.isDeleted == true
+            },
+            sortBy: [SortDescriptor(\.date, order: .forward)]
+        )
+    }
+
+    static func upcomingDescriptor(since date: Date = .now, limit: Int? = nil) -> FetchDescriptor<CountdownItem> {
+        var descriptor = FetchDescriptor<CountdownItem>(
+            predicate: #Predicate<CountdownItem> { item in
+                item.isDeleted == false && item.date >= date
+            },
+            sortBy: [SortDescriptor(\.date, order: .forward)]
+        )
+        if let limit {
+            descriptor.fetchLimit = limit
+        }
+        return descriptor
+    }
+
+    static func activeDescriptor(id: UUID) -> FetchDescriptor<CountdownItem> {
+        FetchDescriptor<CountdownItem>(
+            predicate: #Predicate<CountdownItem> { item in
+                item.id == id && item.isDeleted == false
+            },
+            sortBy: [SortDescriptor(\.date, order: .forward)]
+        )
+    }
+
+    static func appEntityDescriptor(includePast: Bool, since date: Date = .now) -> FetchDescriptor<CountdownItem> {
+        FetchDescriptor<CountdownItem>(
+            predicate: #Predicate<CountdownItem> { item in
+                item.isDeleted == false && (includePast || item.date >= date)
+            },
+            sortBy: [SortDescriptor(\.date, order: .forward)]
+        )
+    }
+
+    static func calendarLinkedUpcomingDescriptor(since date: Date = .now) -> FetchDescriptor<CountdownItem> {
+        FetchDescriptor<CountdownItem>(
+            predicate: #Predicate<CountdownItem> { item in
+                item.isDeleted == false
+                    && (item.calendarEventIdentifier != nil || item.calendarOccurrenceDate != nil)
+                    && item.date >= date
+            },
+            sortBy: [SortDescriptor(\.date, order: .forward)]
+        )
     }
 }

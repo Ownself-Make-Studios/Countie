@@ -13,10 +13,9 @@ struct Provider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
         let countdownItem: CountdownItem = .init(
             name: "Welcome to Countie!",
-            includeTime: false,
             date: .now.addingTimeInterval(60 * 60 * 24 * 3),
             iconName: "sparkles",
-            colorNameRaw: CountdownEventColor.blue.rawValue
+            color: CountdownEventColor.blue
         )
         
         countdownItem.countSince = Date.now.addingTimeInterval(60 * 60 * 24 * 2) // 2 days ago
@@ -35,10 +34,9 @@ struct Provider: AppIntentTimelineProvider {
         if countdownItem == nil {
             countdownItem = .init(
                 name: "Welcome to Countie!",
-                includeTime: false,
                 date: .now.addingTimeInterval(60 * 60 * 24 * 3),
                 iconName: "sparkles",
-                colorNameRaw: CountdownEventColor.blue.rawValue
+                color: CountdownEventColor.blue
             )
         }
         
@@ -97,7 +95,7 @@ struct Provider: AppIntentTimelineProvider {
     @MainActor
     private func getCountdownItem(by id: String) -> CountdownItem? {
         guard let uuid = UUID(uuidString: id) else { return nil }
-        let modelContainer = NomaModelContainer.sharedModelContainer
+        let modelContainer = CountieModelContainer.sharedModelContainer
         let descriptor = CountdownItem.activeDescriptor(id: uuid)
         let items = try? modelContainer.mainContext.fetch(descriptor)
         return items?.first
@@ -106,7 +104,7 @@ struct Provider: AppIntentTimelineProvider {
     // Fetch the latest countdown that has not passed
     @MainActor
     private func getLatestActiveCountdown() -> CountdownItem? {
-        let modelContainer = NomaModelContainer.sharedModelContainer
+        let modelContainer = CountieModelContainer.sharedModelContainer
         let descriptor = CountdownItem.upcomingDescriptor()
         let items = try? modelContainer.mainContext.fetch(descriptor)
         return items?.first
@@ -131,7 +129,7 @@ struct CountdownWidget: Widget {
                     for: .widget
                 )
                 .modelContainer(
-                    NomaModelContainer.sharedModelContainer
+                    CountieModelContainer.sharedModelContainer
                 )
         }
         .configurationDisplayName("Countdown Widget")

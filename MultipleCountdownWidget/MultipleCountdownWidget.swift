@@ -14,10 +14,10 @@ struct Provider: AppIntentTimelineProvider {
         SimpleEntry(
             date: Date(),
             countdowns: [
-                .init(name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", colorNameRaw: CountdownEventColor.blue.rawValue),
-                .init(name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", colorNameRaw: CountdownEventColor.pink.rawValue),
-                .init(name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", colorNameRaw: CountdownEventColor.orange.rawValue),
-                .init(name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", colorNameRaw: CountdownEventColor.purple.rawValue)
+                .init(name: "Welcome to Countie!", date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", color: CountdownEventColor.blue),
+                .init(name: "My Birthday", date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", color: CountdownEventColor.pink),
+                .init(name: "Party Time!", date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", color: CountdownEventColor.orange),
+                .init(name: "New Year Celebration", date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", color: CountdownEventColor.purple)
                 
             ]
         )
@@ -27,10 +27,10 @@ struct Provider: AppIntentTimelineProvider {
         SimpleEntry(
             date: Date(),
             countdowns: [
-                .init(name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", colorNameRaw: CountdownEventColor.blue.rawValue),
-                .init(name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", colorNameRaw: CountdownEventColor.pink.rawValue),
-                .init(name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", colorNameRaw: CountdownEventColor.orange.rawValue),
-                .init(name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", colorNameRaw: CountdownEventColor.purple.rawValue)
+                .init(name: "Welcome to Countie!", date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", color: CountdownEventColor.blue),
+                .init(name: "My Birthday", date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", color: CountdownEventColor.pink),
+                .init(name: "Party Time!", date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", color: CountdownEventColor.orange),
+                .init(name: "New Year Celebration", date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", color: CountdownEventColor.purple)
             ]
         )
     }
@@ -69,7 +69,7 @@ struct Provider: AppIntentTimelineProvider {
     @MainActor
     private func getLatestCountdowns(count: Int = 4) -> [CountdownItem]? {
         
-        let modelContainer = NomaModelContainer.sharedModelContainer
+        let modelContainer = CountieModelContainer.sharedModelContainer
         
         let descriptor = CountdownItem.upcomingDescriptor(
             since: Date(),
@@ -105,7 +105,7 @@ struct MultipleCountdownWidget: Widget {
         AppIntentConfiguration(kind: kind, intent: MultipleCountdownConfigurationAppIntent.self, provider: Provider()) { entry in
             MultipleCountdownWidgetEntryView(entry: entry)
                 .containerBackground(.fill.tertiary, for: .widget)
-                .modelContainer(NomaModelContainer.sharedModelContainer)
+                .modelContainer(CountieModelContainer.sharedModelContainer)
             
             
             
@@ -127,10 +127,10 @@ struct MultipleCountdownWidget: Widget {
     SimpleEntry(
         date:.now,
         countdowns: [
-            .init(name: "Welcome to Countie!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", colorNameRaw: CountdownEventColor.blue.rawValue),
-            .init(name: "My Birthday", includeTime: true, date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", colorNameRaw: CountdownEventColor.pink.rawValue),
-            .init(name: "Party Time!", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", colorNameRaw: CountdownEventColor.orange.rawValue),
-            .init(name: "New Year Celebration", includeTime: false, date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", colorNameRaw: CountdownEventColor.purple.rawValue)
+            .init(name: "Welcome to Countie!", date: Date().addingTimeInterval(60 * 60 * 24 * 3), iconName: "sparkles", color: CountdownEventColor.blue),
+            .init(name: "My Birthday", date: Date().addingTimeInterval(60 * 60 * 24 * 5), iconName: "birthday.cake.fill", color: CountdownEventColor.pink),
+            .init(name: "Party Time!", date: Date().addingTimeInterval(60 * 60 * 24 * 7), iconName: "party.popper.fill", color: CountdownEventColor.orange),
+            .init(name: "New Year Celebration", date: Date().addingTimeInterval(60 * 60 * 24 * 10), iconName: "fireworks", color: CountdownEventColor.purple)
         ]
     )
 }

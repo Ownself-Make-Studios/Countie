@@ -1,31 +1,6 @@
 import Foundation
 import SwiftUI
 
-struct CountdownAppearance: Codable, Hashable {
-    var iconName: String
-    var colorRawValue: String
-
-    static let `default` = CountdownAppearance(
-        iconName: CountdownEventIcon.default,
-        colorRawValue: CountdownEventColor.blue.rawValue
-    )
-
-    var resolvedIconName: String {
-        CountdownEventIcon.allSymbols.contains(iconName) ? iconName : CountdownEventIcon.default
-    }
-
-    var eventColor: CountdownEventColor {
-        CountdownEventColor(rawValue: colorRawValue) ?? .blue
-    }
-
-    var normalized: CountdownAppearance {
-        CountdownAppearance(
-            iconName: resolvedIconName,
-            colorRawValue: eventColor.rawValue
-        )
-    }
-}
-
 private extension Color {
     static func palette(_ red: Int, _ green: Int, _ blue: Int) -> Color {
         Color(
@@ -256,52 +231,4 @@ enum CountdownEventIcon {
     ]
 
     static let allSymbols = allEntries.map(\.symbolName)
-}
-
-extension CountdownItem {
-    var iconName: String? {
-        get { appearance.iconName }
-        set {
-            appearance = CountdownAppearance(
-                iconName: newValue ?? CountdownEventIcon.default,
-                colorRawValue: appearance.colorRawValue
-            )
-        }
-    }
-
-    var colorNameRaw: String? {
-        get { appearance.colorRawValue }
-        set {
-            appearance = CountdownAppearance(
-                iconName: appearance.iconName,
-                colorRawValue: newValue ?? CountdownEventColor.blue.rawValue
-            )
-        }
-    }
-
-    var resolvedIconName: String {
-        appearance.resolvedIconName
-    }
-
-    var eventColor: CountdownEventColor {
-        get { appearance.eventColor }
-        set {
-            appearance = CountdownAppearance(
-                iconName: appearance.iconName,
-                colorRawValue: newValue.rawValue
-            )
-        }
-    }
-
-    var eventTintColor: Color {
-        eventColor.color
-    }
-
-    @discardableResult
-    func normalizeAppearance() -> Bool {
-        let normalized = appearance.normalized
-        guard normalized != appearance else { return false }
-        appearance = normalized
-        return true
-    }
 }

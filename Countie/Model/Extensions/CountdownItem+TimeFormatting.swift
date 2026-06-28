@@ -68,21 +68,11 @@ extension CountdownItem {
     }
 
     var biggestUnit: BiggestUnit? {
-        let diff = dateDifference
-        if let y = diff.year, y != 0 { return BiggestUnit(value: y, unit: .year) }
-        if let m = diff.month, m != 0 { return BiggestUnit(value: m, unit: .month) }
-        if let d = diff.day, d != 0 { return BiggestUnit(value: d, unit: .day) }
-
-        var h = diff.hour ?? 0
-        let min = diff.minute ?? 0
-        if h == 0 && min != 0 {
-            h = min > 0 ? 1 : -1
-        } else if h != 0 && min != 0 && ((h > 0 && min > 0) || (h < 0 && min < 0)) {
-            h += h > 0 ? 1 : -1
-        }
-
-        if h != 0 { return BiggestUnit(value: h, unit: .hour) }
-        if let min = diff.minute, min != 0 { return BiggestUnit(value: min, unit: .minute) }
+        if let year = dateDifference.year, year > 0 { return BiggestUnit(value: year, unit: .year) }
+        if let month = dateDifference.month, month > 0 { return BiggestUnit(value: month, unit: .month) }
+        if let day = dateDifference.day, day > 0 { return BiggestUnit(value: day, unit: .day) }
+        if let hour = dateDifference.hour, hour > 0 { return BiggestUnit(value: hour, unit: .hour) }
+        if let minute = dateDifference.minute, minute > 0 { return BiggestUnit(value: minute, unit: .minute) }
         return nil
     }
 

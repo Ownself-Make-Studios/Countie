@@ -16,9 +16,7 @@ struct OnboardingFlowView: View {
 
     @State private var selectedPage = 0
     @State private var calendarStatus = CalendarAccessManager.permissionStatus()
-    @State private var notificationStatus: NotificationPermissionStatus = .notDetermined
     @State private var isRequestingCalendarPermission = false
-    @State private var isRequestingNotificationPermission = false
 
     private let pageCount = 3
 
@@ -128,7 +126,7 @@ struct OnboardingFlowView: View {
                 Text("Stay in sync")
                     .font(.title)
                     .bold()
-                Text("Connect your calendar and notifications so Countie can keep important moments close and remind you before they happen.")
+                Text("Connect your calendar so Countie can keep important moments close.")
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -145,18 +143,6 @@ struct OnboardingFlowView: View {
                 settingsAction: openAppSettingsIfNeeded(showingForDeniedState: isCalendarDenied)
             )
 
-            PermissionCard(
-                title: "Notifications",
-                systemImage: "bell.badge",
-                description: "Allow reminders so Countie can notify you before an event reaches its countdown target.",
-                statusText: notificationStatusText,
-                isAuthorized: notificationStatus.isAuthorized,
-                actionTitle: notificationActionTitle,
-                isLoading: isRequestingNotificationPermission,
-                action: requestNotificationPermission,
-                settingsAction: openAppSettingsIfNeeded(showingForDeniedState: isNotificationDenied)
-            )
-
             Text("You can keep using Countie even if you skip permissions for now.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -168,10 +154,6 @@ struct OnboardingFlowView: View {
 
     private var isCalendarDenied: Bool {
         calendarStatus == .denied || calendarStatus == .restricted || calendarStatus == .writeOnly
-    }
-
-    private var isNotificationDenied: Bool {
-        notificationStatus == .denied
     }
 
     private var calendarStatusText: String {
@@ -189,27 +171,8 @@ struct OnboardingFlowView: View {
         }
     }
 
-    private var notificationStatusText: String {
-        switch notificationStatus {
-        case .authorized:
-            return "Allowed"
-        case .provisional:
-            return "Allowed quietly"
-        case .ephemeral:
-            return "Allowed temporarily"
-        case .notDetermined:
-            return "Not requested yet"
-        case .denied:
-            return "Denied"
-        }
-    }
-
     private var calendarActionTitle: String {
         calendarStatus.isAuthorized ? "Granted" : "Allow Calendar Access"
-    }
-
-    private var notificationActionTitle: String {
-        notificationStatus.isAuthorized ? "Granted" : "Allow Notifications"
     }
 
     private func requestCalendarPermission() {
@@ -223,20 +186,8 @@ struct OnboardingFlowView: View {
         }
     }
 
-    private func requestNotificationPermission() {
-        guard !notificationStatus.isAuthorized else { return }
-
-        Task {
-            isRequestingNotificationPermission = true
-            defer { isRequestingNotificationPermission = false }
-            _ = await CountdownReminderScheduler.requestNotificationPermission()
-            await refreshPermissionState()
-        }
-    }
-
     private func refreshPermissionState() async {
         calendarStatus = CalendarAccessManager.permissionStatus()
-        notificationStatus = await CountdownReminderScheduler.notificationPermissionStatus()
     }
 
     private func openAppSettingsIfNeeded(showingForDeniedState: Bool) -> (() -> Void)? {

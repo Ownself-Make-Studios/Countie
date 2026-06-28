@@ -135,7 +135,7 @@ struct SettingsView: View {
 #Preview {
     SettingsView()
         .environmentObject(CountdownStore(
-            context: NomaModelContainer.sharedModelContainer.mainContext
+            context: CountieModelContainer.sharedModelContainer.mainContext
         ))
 
 }

@@ -222,7 +222,6 @@ struct CalendarEventsView: View {
             AddCountdownView(
                 name: selection.event.title,
                 countdownDate: selection.event.startDate,
-                hasTime: !selection.event.isAllDay,
                 linkedEvent: selection.event,
                 onAdd: {
                     onSelectEvent?(selection.event)

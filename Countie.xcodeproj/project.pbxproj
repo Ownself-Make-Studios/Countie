@@ -21,8 +21,6 @@
 		C0D3A0072F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+TimeFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A0042F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+TimeFormatting.swift */; };
 		C0D3A00A2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A0082F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift */; };
 		C0D3A00B2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A0082F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift */; };
-		C0D3A00E2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A00C2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift */; };
-		C0D3A00F2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D3A00C2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,7 +84,6 @@
 		C0D3A0002F00100000C0FFEE /* Countie/Model/Countdown/CountdownAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Countie/Model/Countdown/CountdownAppearance.swift; sourceTree = SOURCE_ROOT; };
 		C0D3A0042F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+TimeFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Countie/Model/Extensions/CountdownItem+TimeFormatting.swift"; sourceTree = SOURCE_ROOT; };
 		C0D3A0082F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Countie/Model/Extensions/CountdownItem+Samples.swift"; sourceTree = SOURCE_ROOT; };
-		C0D3A00C2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -96,22 +93,6 @@
 				Info.plist,
 			);
 			target = BD92FC0E2CC73FE500D3FC20 /* Countie */;
-		};
-		BD86E8572F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Model/Reminders/CountdownReminder.swift,
-				Model/Reminders/CountdownReminderScheduler.swift,
-			);
-			target = BD92FC202CC73FE700D3FC20 /* CountieTests */;
-		};
-		BD86E8582F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieUITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Model/Reminders/CountdownReminder.swift,
-				Model/Reminders/CountdownReminderScheduler.swift,
-			);
-			target = BD92FC2A2CC73FE700D3FC20 /* CountieUITests */;
 		};
 		BD98080B2CC7960B0033C727 /* Exceptions for "CountdownWidget" folder in "CountdownWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -127,9 +108,7 @@
 				Assets.xcassets,
 				CalendarAccessManager.swift,
 				Model/Countdown/CountdownItem.swift,
-				Model/Persistence/ModelContainer.swift,
-				Model/Reminders/CountdownReminder.swift,
-				Model/Reminders/CountdownReminderScheduler.swift,
+				Model/Persistence/CountieModelContainer.swift,
 				Model/Stores/CountdownStore.swift,
 				Model/Stores/ModalStore.swift,
 				Views/Shared/Components/CircularEmojiView.swift,
@@ -150,9 +129,7 @@
 				AppIntents/CountdownEntity.swift,
 				CalendarAccessManager.swift,
 				Model/Countdown/CountdownItem.swift,
-				Model/Persistence/ModelContainer.swift,
-				Model/Reminders/CountdownReminder.swift,
-				Model/Reminders/CountdownReminderScheduler.swift,
+				Model/Persistence/CountieModelContainer.swift,
 				Model/Stores/CountdownStore.swift,
 				Model/Stores/ModalStore.swift,
 			);
@@ -179,8 +156,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				BD4C6B432CD5C79E00F4F03E /* Exceptions for "Countie" folder in "Countie" target */,
-				BD86E8572F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieTests" target */,
-				BD86E8582F909A7200F2DE76 /* Exceptions for "Countie" folder in "CountieUITests" target */,
 				BD9808112CC797B10033C727 /* Exceptions for "Countie" folder in "CountdownWidgetExtension" target */,
 				BDAE70652E0BF2F000099A3A /* Exceptions for "Countie" folder in "MultipleCountdownWidgetExtension" target */,
 			);
@@ -267,7 +242,6 @@
 				C0D3A0002F00100000C0FFEE /* Countie/Model/Countdown/CountdownAppearance.swift */,
 				C0D3A0042F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+TimeFormatting.swift */,
 				C0D3A0082F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift */,
-				C0D3A00C2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -553,7 +527,6 @@
 				C0D3A0022F00100000C0FFEE /* Countie/Model/Countdown/CountdownAppearance.swift in Sources */,
 				C0D3A0062F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+TimeFormatting.swift in Sources */,
 				C0D3A00A2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift in Sources */,
-				C0D3A00E2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,7 +537,6 @@
 				C0D3A0032F00100000C0FFEE /* Countie/Model/Countdown/CountdownAppearance.swift in Sources */,
 				C0D3A0072F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+TimeFormatting.swift in Sources */,
 				C0D3A00B2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+Samples.swift in Sources */,
-				C0D3A00F2F00100000C0FFEE /* Countie/Model/Extensions/CountdownItem+FetchDescriptors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

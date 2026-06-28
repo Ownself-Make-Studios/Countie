@@ -22,7 +22,7 @@ public struct DeleteCountdownIntent: AppIntent {
             throw $countdown.needsValueError("Choose a countdown to delete.")
         }
 
-        let context = NomaModelContainer.sharedModelContainer.mainContext
+        let context = CountieModelContainer.sharedModelContainer.mainContext
         let descriptor = CountdownItem.activeDescriptor(id: uuid)
 
         guard let item = try context.fetch(descriptor).first else {
@@ -32,7 +32,6 @@ public struct DeleteCountdownIntent: AppIntent {
         item.isDeleted = true
         try context.save()
 
-        await CountdownReminderScheduler.removeNotifications(for: uuid)
         WidgetCenter.shared.reloadAllTimelines()
 
         return .result(dialog: "Deleted \(countdown.name).")

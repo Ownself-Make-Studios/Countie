@@ -21,38 +21,18 @@ class CountdownStore: ObservableObject {
 
     private var context: ModelContext
 
-    private func normalizeAppearanceForAllCountdowns() {
-        let descriptor = CountdownItem.activeDescriptor()
-        guard let items = try? context.fetch(descriptor) else { return }
-
-        let didChange = items.reduce(false) { partialResult, item in
-            item.normalizeAppearance() || partialResult
-        }
-
-        if didChange {
-            try? context.save()
-        }
-    }
-
     func syncCountdownsWithEvents() {
-        var changedCountdowns: [CountdownItem] = []
-        var deletedCountdownIDs: [UUID] = []
-
         if let countdowns = self.fetchCalendarLinkedCountdowns() {
             for countdown in countdowns {
                 if let event = CalendarAccessManager.resolveEvent(for: countdown) {
                     // Update countdown date to match event's start date
                     if countdown.date != event.startDate {
                         countdown.date = event.startDate
-                        changedCountdowns.append(countdown)
                     }
 
                     let linkDetails = CalendarEventLinkDetails(event: event)
                     if countdown.calendarEventIdentifier != linkDetails.eventIdentifier {
                         countdown.calendarEventIdentifier = linkDetails.eventIdentifier
-                        if !changedCountdowns.contains(where: { $0.id == countdown.id }) {
-                            changedCountdowns.append(countdown)
-                        }
                     }
                     if countdown.calendarSeriesIdentifier != linkDetails.seriesIdentifier {
                         countdown.calendarSeriesIdentifier = linkDetails.seriesIdentifier
@@ -66,65 +46,19 @@ class CountdownStore: ObservableObject {
                 } else {
                     // Event was deleted or not found, mark countdown as deleted
                     countdown.isDeleted = true
-                    deletedCountdownIDs.append(countdown.id)
                 }
             }
             // Persist changes to the model context
             try? self.context.save()
             // Refresh countdown arrays and UI
             self.fetchCountdowns()
-
-            let changedSnapshots = changedCountdowns.map {
-                (
-                    id: $0.id,
-                    name: $0.name,
-                    date: $0.date,
-                    reminders: CountdownReminderScheduler.snapshot(for: $0)
-                )
-            }
-
-            Task {
-                for countdownID in deletedCountdownIDs {
-                    await CountdownReminderScheduler.removeNotifications(for: countdownID)
-                }
-
-                for countdown in changedSnapshots {
-                    await CountdownReminderScheduler.syncNotifications(
-                        countdownID: countdown.id,
-                        countdownName: countdown.name,
-                        eventDate: countdown.date,
-                        reminders: countdown.reminders
-                    )
-                }
-            }
         }
     }
 
     init(context: ModelContext) {
         self.context = context
-        normalizeAppearanceForAllCountdowns()
         fetchCountdowns()
         syncCountdownsWithEvents() // Sync at launch
-        let countdownSnapshots = self.countdowns
-            .filter { !$0.isDeleted }
-            .map {
-                (
-                    id: $0.id,
-                    name: $0.name,
-                    date: $0.date,
-                    reminders: CountdownReminderScheduler.snapshot(for: $0)
-                )
-            }
-        Task {
-            for countdown in countdownSnapshots {
-                await CountdownReminderScheduler.syncNotifications(
-                    countdownID: countdown.id,
-                    countdownName: countdown.name,
-                    eventDate: countdown.date,
-                    reminders: countdown.reminders
-                )
-            }
-        }
 
         let token = NotificationCenter.default.addObserver(
             forName: .EKEventStoreChanged,
@@ -153,12 +87,6 @@ class CountdownStore: ObservableObject {
         let fetchedItems = try? context.fetch(CountdownItem.activeDescriptor())
 
         countdowns = fetchedItems ?? []
-        let didNormalize = countdowns.reduce(false) { partialResult, item in
-            item.normalizeAppearance() || partialResult
-        }
-        if didNormalize {
-            try? context.save()
-        }
         upcomingCountdowns = countdowns.filter { $0.date >= Date() }
         passedCountdowns = countdowns.filter { $0.date < Date() }
 
@@ -173,10 +101,6 @@ class CountdownStore: ObservableObject {
     func deleteCountdown(_ countdown: CountdownItem) {
         countdown.isDeleted = true
         try? context.save()
-        let countdownID = countdown.id
-        Task {
-            await CountdownReminderScheduler.removeNotifications(for: countdownID)
-        }
         fetchCountdowns()
     }
 }

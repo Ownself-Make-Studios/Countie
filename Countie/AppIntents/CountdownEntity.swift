@@ -75,7 +75,7 @@ public struct CountdownEntityQuery: EntityStringQuery {
 
     @MainActor
     private func fetchCountdownEntities(includePast: Bool) async -> [CountdownEntity] {
-        let container = NomaModelContainer.sharedModelContainer
+        let container = CountieModelContainer.sharedModelContainer
         let descriptor = CountdownItem.appEntityDescriptor(includePast: includePast)
         let items = (try? container.mainContext.fetch(descriptor)) ?? []
         return items.map { CountdownEntity(item: $0) }

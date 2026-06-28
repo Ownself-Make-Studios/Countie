@@ -17,7 +17,7 @@ struct CountieApp: App {
     @Environment(\.scenePhase) private var scenePhase
     
     init() {
-        _store = StateObject(wrappedValue: CountdownStore(context: NomaModelContainer.sharedModelContainer.mainContext))
+        _store = StateObject(wrappedValue: CountdownStore(context: CountieModelContainer.sharedModelContainer.mainContext))
         _modalStore = StateObject(wrappedValue: ModalStore())
     }
     
@@ -49,7 +49,7 @@ struct CountieApp: App {
                 openPendingCountdownIfNeeded()
             }
         }
-        .modelContainer(NomaModelContainer.sharedModelContainer)
+        .modelContainer(CountieModelContainer.sharedModelContainer)
     }
 
     private func openDeepLink(_ url: URL) {
