@@ -1,263 +1,84 @@
 {
+  "features" : [
+    "refractivity",
+    "specular-location"
+  ],
   "fill" : {
-    "solid" : "display-p3:0.91943,0.85400,0.77832,1.00000"
+    "linear-gradient" : [
+      "display-p3:0.99618,1.00000,0.96647,1.00000",
+      "display-p3:1.00000,0.93309,0.91164,1.00000"
+    ]
   },
   "groups" : [
     {
-      "blur-material-specializations" : [
-        {
-          "appearance" : "dark",
-          "value" : 0.69
-        }
-      ],
+      "blend-mode" : "normal",
+      "blur-material" : 1,
       "layers" : [
         {
-          "image-name" : "hand.svg",
-          "name" : "hand",
+          "glass" : true,
+          "image-name" : "Frame 2 2.png",
+          "name" : "Frame 2 2",
           "position" : {
-            "scale" : 1.83,
+            "scale" : 0.58,
             "translation-in-points" : [
-              -253.68734692794146,
-              66.52449900749878
+              0,
+              -296
             ]
           }
         },
         {
           "glass" : true,
-          "image-name" : "hand-1.svg",
-          "name" : "hand-1",
+          "image-name" : "Frame 9 2.png",
+          "name" : "Frame 9 2",
           "position" : {
-            "scale" : 2.09,
+            "scale" : 0.58,
             "translation-in-points" : [
-              241.39731755181413,
-              52.242254040467515
+              0,
+              -15
+            ]
+          }
+        },
+        {
+          "blend-mode" : "normal",
+          "fill" : "none",
+          "image-name" : "Rectangle 2 2.png",
+          "name" : "Rectangle 2 2",
+          "position" : {
+            "scale" : 0.58,
+            "translation-in-points" : [
+              0,
+              -219
+            ]
+          }
+        },
+        {
+          "image-name" : "Group 23 2.png",
+          "name" : "Group 23 2",
+          "position" : {
+            "scale" : 0.58,
+            "translation-in-points" : [
+              0,
+              0
             ]
           }
         }
       ],
       "lighting" : "individual",
-      "position" : {
-        "scale" : 1,
-        "translation-in-points" : [
-          9.671295658557483,
-          70.04973174913528
-        ]
-      },
-      "shadow-specializations" : [
-        {
-          "value" : {
-            "kind" : "neutral",
-            "opacity" : 0.49
-          }
-        },
-        {
-          "appearance" : "dark",
-          "value" : {
-            "kind" : "neutral",
-            "opacity" : 0.65
-          }
-        }
-      ],
-      "translucency-specializations" : [
-        {
-          "value" : {
-            "enabled" : true,
-            "value" : 0.04
-          }
-        },
-        {
-          "appearance" : "dark",
-          "value" : {
-            "enabled" : true,
-            "value" : 0.06
-          }
-        }
-      ]
-    },
-    {
-      "blur-material-specializations" : [
-        {
-          "appearance" : "dark",
-          "value" : 1
-        }
-      ],
-      "layers" : [
-        {
-          "image-name" : "Calendar.svg",
-          "name" : "Calendar",
-          "position" : {
-            "scale" : 1.99,
-            "translation-in-points" : [
-              -9.671295658557483,
-              251.40085999999997
-            ]
-          }
-        }
-      ],
-      "lighting-specializations" : [
-        {
-          "appearance" : "dark",
-          "value" : "combined"
-        }
-      ],
-      "position" : {
-        "scale" : 1,
-        "translation-in-points" : [
-          9.671295658557483,
-          70.04973174913528
-        ]
-      },
-      "shadow-specializations" : [
-        {
-          "value" : {
-            "kind" : "layer-color",
-            "opacity" : 0.5
-          }
-        },
-        {
-          "appearance" : "dark",
-          "value" : {
-            "kind" : "layer-color",
-            "opacity" : 1
-          }
-        }
-      ],
-      "translucency-specializations" : [
-        {
-          "value" : {
-            "enabled" : true,
-            "value" : 0
-          }
-        },
-        {
-          "appearance" : "dark",
-          "value" : {
-            "enabled" : true,
-            "value" : 0.42
-          }
-        }
-      ]
-    },
-    {
-      "blur-material-specializations" : [
-        {
-          "value" : 0.5
-        },
-        {
-          "appearance" : "dark",
-          "value" : 1
-        }
-      ],
-      "layers" : [
-        {
-          "hidden" : true,
-          "image-name" : "Eye-nose-mouth.svg",
-          "name" : "Eye-nose-mouth",
-          "position" : {
-            "scale" : 2.35,
-            "translation-in-points" : [
-              -17.22570186405801,
-              -77.69037437260761
-            ]
-          }
-        },
-        {
-          "hidden" : true,
-          "image-name" : "blush.svg",
-          "name" : "blush",
-          "position" : {
-            "scale" : 2.66,
-            "translation-in-points" : [
-              170.54101730896002,
-              -16.936896468224177
-            ]
-          }
-        },
-        {
-          "hidden" : true,
-          "image-name" : "blush.svg",
-          "name" : "blush",
-          "position" : {
-            "scale" : 2.66,
-            "translation-in-points" : [
-              -222.27070186405808,
-              -48.85689646822425
-            ]
-          }
-        },
-        {
-          "hidden" : true,
-          "image-name" : "face.svg",
-          "name" : "face",
-          "position" : {
-            "scale" : 2.35,
-            "translation-in-points" : [
-              -18.137938776223564,
-              -106.6629531633937
-            ]
-          }
-        },
-        {
-          "hidden" : true,
-          "image-name" : "Ears.svg",
-          "name" : "Ears",
-          "position" : {
-            "scale" : 2.36,
-            "translation-in-points" : [
-              9,
-              -303
-            ]
-          }
-        },
-        {
-          "hidden" : false,
-          "image-name" : "Cat 2.svg",
-          "name" : "Cat 2",
-          "position" : {
-            "scale" : 2.07,
-            "translation-in-points" : [
-              -9.671670784483013,
-              -120.59295316339353
-            ]
-          }
-        }
-      ],
-      "lighting-specializations" : [
-        {
-          "value" : "individual"
-        },
-        {
-          "appearance" : "dark",
-          "value" : "combined"
-        }
-      ],
-      "position" : {
-        "scale" : 1,
-        "translation-in-points" : [
-          9.671295658557483,
-          70.04973174913528
-        ]
+      "name" : "Group",
+      "refractivity" : {
+        "depth" : 0,
+        "enabled" : true,
+        "strength" : 1
       },
       "shadow" : {
         "kind" : "layer-color",
-        "opacity" : 1
+        "opacity" : 0.8
       },
-      "specular" : true,
-      "translucency-specializations" : [
-        {
-          "value" : {
-            "enabled" : true,
-            "value" : 0.33
-          }
-        },
-        {
-          "appearance" : "dark",
-          "value" : {
-            "enabled" : true,
-            "value" : 0.24
-          }
-        }
-      ]
+      "specular" : "outside",
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.21
+      }
     }
   ],
   "supported-platforms" : {
