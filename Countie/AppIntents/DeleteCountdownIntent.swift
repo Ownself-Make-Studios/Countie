@@ -33,10 +33,8 @@ public struct DeleteCountdownIntent: AppIntent {
         item.isDeleted = true
         try context.save()
         
-        try? await CSSearchableIndex.default().deleteAppEntities(
-            identifiedBy: [item.id.uuidString],
-            ofType: CountdownEntity.self
-        )
+        CountdownSearchIndex.delete(id: item.id)
+        
 
         WidgetCenter.shared.reloadAllTimelines()
         CountieShortcuts.updateAppShortcutParameters()

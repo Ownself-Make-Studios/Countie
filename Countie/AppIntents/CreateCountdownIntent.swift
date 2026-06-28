@@ -52,10 +52,8 @@ public struct CreateCountdownIntent: AppIntent {
         context.insert(item)
         try context.save()
         
-        try? await CSSearchableIndex.default().indexAppEntities([
-            CountdownEntity(item: item)
-        ])
-
+        
+        CountdownSearchIndex.index(item)
         WidgetCenter.shared.reloadAllTimelines()
         CountieShortcuts.updateAppShortcutParameters()
 

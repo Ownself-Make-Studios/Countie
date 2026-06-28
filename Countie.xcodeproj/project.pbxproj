@@ -96,10 +96,10 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIntents/AppIntentNavigationStore.swift,
-				AppIntents/CountdownEntity.swift,
 				AppIntents/CountieShortcuts.swift,
 				AppIntents/CreateCountdownIntent.swift,
 				AppIntents/DeleteCountdownIntent.swift,
+				AppIntents/Entities/CountdownEntity.swift,
 				AppIntents/OpenCountdownIntent.swift,
 				AppIntents/ShowNextCountdownIntent.swift,
 				Assets.xcassets,
@@ -127,10 +127,10 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				AppIntents/AppIntentNavigationStore.swift,
-				AppIntents/CountdownEntity.swift,
 				AppIntents/CountieShortcuts.swift,
 				AppIntents/CreateCountdownIntent.swift,
 				AppIntents/DeleteCountdownIntent.swift,
+				AppIntents/Entities/CountdownEntity.swift,
 				AppIntents/OpenCountdownIntent.swift,
 				AppIntents/ShowNextCountdownIntent.swift,
 				Assets.xcassets,
