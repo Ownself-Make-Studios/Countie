@@ -260,8 +260,36 @@ struct ContentView: View {
                 countdownStore.fetchCountdowns()
             }
         }
+        .modifier(
+            AppIntentExecutionModifier(countdownStore: countdownStore, sheetStore: sheetStore)
+        )
+        
     }
 
+}
+
+struct AppIntentExecutionModifier: ViewModifier {
+    let countdownStore: CountdownStore
+    let sheetStore: SheetStore
+    
+    init(countdownStore: CountdownStore, sheetStore: SheetStore) {
+        self.countdownStore = countdownStore
+        self.sheetStore = sheetStore
+    }
+    
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content
+                .onAppIntentExecution(OpenCountdownIntent.self) { intent in
+                if let countdown = countdownStore.upcomingCountdowns.first(where: { $0.id.uuidString == intent.target.id }) {
+                    sheetStore.isSelectedCountdown = countdown
+            }
+        
+            }
+        } else {
+            content
+        }
+    }
 }
 
 // https://stackoverflow.com/a/79020867

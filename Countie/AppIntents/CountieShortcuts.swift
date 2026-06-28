@@ -25,8 +25,8 @@ public struct CountieShortcuts: AppShortcutsProvider {
         AppShortcut(
             intent: OpenCountdownIntent(),
             phrases: [
-                "Open \(\.$countdown) in \(.applicationName)",
-                "Show \(\.$countdown) in \(.applicationName)",
+                "Open \(\.$target) in \(.applicationName)",
+                "Show \(\.$target) in \(.applicationName)",
                 "Open a countdown in \(.applicationName)",
                 "Show a countdown in \(.applicationName)"
             ],
@@ -44,16 +44,17 @@ public struct CountieShortcuts: AppShortcutsProvider {
             systemImageName: "calendar.badge.clock"
         )
 
-        AppShortcut(
-            intent: DeleteCountdownIntent(),
-            phrases: [
-                "Delete \(\.$countdown) in \(.applicationName)",
-                "Remove \(\.$countdown) in \(.applicationName)",
-                "Delete a countdown in \(.applicationName)",
-                "Remove a countdown in \(.applicationName)"
-            ],
-            shortTitle: "Delete Countdown",
-            systemImageName: "trash"
-        )
+//        AppShortcut(
+//            intent: DeleteCountdownIntent(),
+//            phrases: [
+//                "Delete \(\.$countdown) in \(.applicationName)",
+//                "Remove \(\.$countdown) in \(.applicationName)",
+//                "Delete a countdown in \(.applicationName)",
+//                "Remove a countdown in \(.applicationName)"
+//            ],
+//            shortTitle: "Delete Countdown",
+//            systemImageName: "trash"
+//            
+//        )
     }
 }

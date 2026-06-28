@@ -9,6 +9,7 @@ import Foundation
 import AppIntents
 import SwiftData
 import WidgetKit
+import CoreSpotlight
 
 public struct CreateCountdownIntent: AppIntent {
     public static var title: LocalizedStringResource = "Create Countdown"
@@ -50,8 +51,13 @@ public struct CreateCountdownIntent: AppIntent {
         let context = CountieModelContainer.sharedModelContainer.mainContext
         context.insert(item)
         try context.save()
+        
+        try? await CSSearchableIndex.default().indexAppEntities([
+            CountdownEntity(item: item)
+        ])
 
         WidgetCenter.shared.reloadAllTimelines()
+        CountieShortcuts.updateAppShortcutParameters()
 
         return .result(dialog: "Created \(trimmedName).")
     }

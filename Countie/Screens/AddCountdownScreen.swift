@@ -9,6 +9,7 @@ import EventKit
 import SwiftUI
 import SwiftData
 import WidgetKit
+import CoreSpotlight
 
 private struct IconPickerSheet: View {
     @Environment(\.dismiss) private var dismiss
@@ -355,6 +356,8 @@ struct AddCountdownView: View {
     }
 
     private func handleSaveItem() {
+        let item: CountdownItem;
+        
         if let editing = countdownToEdit {
             editing.iconName = iconName
             editing.color = color
@@ -365,8 +368,9 @@ struct AddCountdownView: View {
             applyLinkedEventMetadata(from: linkedEvent, to: editing)
 
             try? modelContext.save()
+            item = editing
         } else {
-            let item = CountdownItem(
+            item = CountdownItem(
                 name: name,
                 date: countdownDate,
                 iconName: iconName,
@@ -379,8 +383,10 @@ struct AddCountdownView: View {
             modelContext.insert(item)
             try? modelContext.save()
         }
-
+        
         WidgetCenter.shared.reloadAllTimelines()
+        CountdownSearchIndex.index(item)
+        CountieShortcuts.updateAppShortcutParameters()
         countdownStore.fetchCountdowns()
         dismiss()
         onAdd?()

@@ -10,6 +10,8 @@ import EventKit
 import SwiftData
 import SwiftUI
 import WidgetKit
+import AppIntents
+import AppIntents
 
 class CountdownStore: ObservableObject {
     private var eventStore = EKEventStore()
@@ -68,6 +70,7 @@ class CountdownStore: ObservableObject {
             guard let self else { return }
             self.syncCountdownsWithEvents()
             WidgetCenter.shared.reloadAllTimelines()
+            CountieShortcuts.updateAppShortcutParameters()
         }
         cancellables.append(token)
     }
@@ -99,8 +102,13 @@ class CountdownStore: ObservableObject {
     }
 
     func deleteCountdown(_ countdown: CountdownItem) {
+        let id = countdown.id
+        
         countdown.isDeleted = true
         try? context.save()
+
+        CountdownSearchIndex.delete(id: id)
+        CountieShortcuts.updateAppShortcutParameters()
         fetchCountdowns()
     }
 }

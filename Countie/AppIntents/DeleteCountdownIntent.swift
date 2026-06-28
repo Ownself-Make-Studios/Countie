@@ -2,6 +2,7 @@ import AppIntents
 import Foundation
 import SwiftData
 import WidgetKit
+import CoreSpotlight
 
 public struct DeleteCountdownIntent: AppIntent {
     public static var title: LocalizedStringResource = "Delete Countdown"
@@ -31,8 +32,16 @@ public struct DeleteCountdownIntent: AppIntent {
 
         item.isDeleted = true
         try context.save()
+        
+        try? await CSSearchableIndex.default().deleteAppEntities(
+            identifiedBy: [item.id.uuidString],
+            ofType: CountdownEntity.self
+        )
 
         WidgetCenter.shared.reloadAllTimelines()
+        CountieShortcuts.updateAppShortcutParameters()
+        
+        
 
         return .result(dialog: "Deleted \(countdown.name).")
     }

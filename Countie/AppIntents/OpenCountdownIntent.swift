@@ -1,22 +1,20 @@
 import AppIntents
 
-public struct OpenCountdownIntent: AppIntent {
-    public static var title: LocalizedStringResource = "Open Countdown"
-    public static var description = IntentDescription("Opens a countdown in Countie.")
-    public static var openAppWhenRun = true
+public struct OpenCountdownIntent: OpenIntent, TargetContentProvidingIntent {
+    
+    public static let title: LocalizedStringResource = "Open Countdown"
 
-    @Parameter(title: "Countdown")
-    public var countdown: CountdownEntity
+    @Parameter(title: "Countdown", requestValueDialog: "Which Countdown?")
+    public var target: CountdownEntity
 
     public static var parameterSummary: some ParameterSummary {
-        Summary("Open \(\.$countdown)")
+        Summary("Open \(\.$target)")
     }
-
+    
     public init() {}
 
     @MainActor
-    public func perform() async throws -> some IntentResult & ProvidesDialog {
-        AppIntentNavigationStore.requestOpenCountdown(id: countdown.id)
-        return .result(dialog: "Opening \(countdown.name).")
+    public func perform() async throws -> some IntentResult {
+        return .result()
     }
 }

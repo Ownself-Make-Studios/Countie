@@ -95,7 +95,13 @@
 		BD9808112CC797B10033C727 /* Exceptions for "Countie" folder in "CountdownWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppIntents/AppIntentNavigationStore.swift,
 				AppIntents/CountdownEntity.swift,
+				AppIntents/CountieShortcuts.swift,
+				AppIntents/CreateCountdownIntent.swift,
+				AppIntents/DeleteCountdownIntent.swift,
+				AppIntents/OpenCountdownIntent.swift,
+				AppIntents/ShowNextCountdownIntent.swift,
 				Assets.xcassets,
 				CalendarAccessManager.swift,
 				Model/CountdownEventColor.swift,
@@ -106,6 +112,7 @@
 				Model/SheetStore.swift,
 				Views/CircularEmojiView.swift,
 				Views/CircularProgressBar.swift,
+				Views/CountdownRow.swift,
 			);
 			target = BD9807F32CC796090033C727 /* CountdownWidgetExtension */;
 		};
@@ -119,7 +126,14 @@
 		BDAE70652E0BF2F000099A3A /* Exceptions for "Countie" folder in "MultipleCountdownWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppIntents/AppIntentNavigationStore.swift,
 				AppIntents/CountdownEntity.swift,
+				AppIntents/CountieShortcuts.swift,
+				AppIntents/CreateCountdownIntent.swift,
+				AppIntents/DeleteCountdownIntent.swift,
+				AppIntents/OpenCountdownIntent.swift,
+				AppIntents/ShowNextCountdownIntent.swift,
+				Assets.xcassets,
 				CalendarAccessManager.swift,
 				Model/CountdownEventColor.swift,
 				Model/CountdownEventIcon.swift,
@@ -127,6 +141,9 @@
 				Model/CountdownStore.swift,
 				Model/CountieModelContainer.swift,
 				Model/SheetStore.swift,
+				Views/CircularEmojiView.swift,
+				Views/CircularProgressBar.swift,
+				Views/CountdownRow.swift,
 			);
 			target = BDAE704F2E0BF10100099A3A /* MultipleCountdownWidgetExtension */;
 		};
@@ -686,7 +703,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -720,7 +737,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -815,6 +832,7 @@
 				INFOPLIST_FILE = CountdownWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CountdownWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -843,6 +861,7 @@
 				INFOPLIST_FILE = CountdownWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = CountdownWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -871,7 +890,7 @@
 				INFOPLIST_FILE = MultipleCountdownWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MultipleCountdownWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -902,7 +921,7 @@
 				INFOPLIST_FILE = MultipleCountdownWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MultipleCountdownWidget;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
