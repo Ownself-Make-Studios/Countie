@@ -20,6 +20,15 @@ struct CountdownRow: View {
     var countdownHasEnded: Bool {
         item.date < currentTime
     }
+    
+    init(item: CountdownItem, onTap: (() -> Void)? = nil) {
+        self.item = item
+        self.onTap = onTap
+    }
+    
+    init(entity: CountdownEntity){
+        item = CountdownItem(name: entity.name, date: entity.date, iconName: entity.iconName)
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {

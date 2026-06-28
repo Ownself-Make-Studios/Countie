@@ -2,7 +2,7 @@ import AppIntents
 import Foundation
 import SwiftData
 
-public struct CountdownEntity: AppEntity, Identifiable, Hashable {
+public struct CountdownEntity: AppEntity {
     public static var typeDisplayRepresentation = TypeDisplayRepresentation(
         name: "Countdown"
     )
@@ -10,9 +10,13 @@ public struct CountdownEntity: AppEntity, Identifiable, Hashable {
     public static var defaultQuery = CountdownEntityQuery()
 
     public let id: String
-    public let name: String
-    public let date: Date
-    public let iconName: String
+    
+    @Property
+    public var name: String
+    @Property
+    public var date: Date
+    @Property
+    public var iconName: String
 
     public var displayRepresentation: DisplayRepresentation {
         DisplayRepresentation(
@@ -22,25 +26,11 @@ public struct CountdownEntity: AppEntity, Identifiable, Hashable {
         )
     }
 
-    public init(
-        id: String,
-        name: String,
-        date: Date,
-        iconName: String
-    ) {
-        self.id = id
-        self.name = name
-        self.date = date
-        self.iconName = iconName
-    }
-
     init(item: CountdownItem) {
-        self.init(
-            id: item.id.uuidString,
-            name: item.name,
-            date: item.date,
-            iconName: item.resolvedIconName
-        )
+        self.id = item.id.uuidString;
+        self.name = item.name;
+        self.date = item.date;
+        self.iconName = item.resolvedIconName;
     }
 }
 

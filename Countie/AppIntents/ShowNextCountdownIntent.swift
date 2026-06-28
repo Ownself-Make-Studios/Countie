@@ -1,6 +1,13 @@
 import AppIntents
 import Foundation
 import SwiftData
+import SwiftUI
+
+struct NoUpcomingCountdownError: LocalizedError {
+    var errorDescription: String? {
+        "You don't have any upcoming countdowns."
+    }
+}
 
 public struct ShowNextCountdownIntent: AppIntent {
     public static var title: LocalizedStringResource = "Show Next Countdown"
@@ -9,13 +16,22 @@ public struct ShowNextCountdownIntent: AppIntent {
     public init() {}
 
     @MainActor
-    public func perform() async throws -> some IntentResult & ProvidesDialog {
+    public func perform() async throws -> some ReturnsValue<CountdownEntity> & ProvidesDialog & ShowsSnippetView {
         guard let item = nextCountdown() else {
-            return .result(dialog: "You don't have any upcoming countdowns.")
+            throw NoUpcomingCountdownError()
         }
 
-        let remainingText = Self.remainingText(until: item.date)
-        return .result(dialog: "Your next countdown is \(item.name), \(remainingText).")
+        let remainingText = Self.remainingText(item: item)
+        let entity = CountdownEntity(item: item)
+        
+        return .result(
+            value: entity,
+            dialog: "Your next countdown is \(item.name), \(remainingText).",
+            view: CountdownRow(item: item)
+                .padding()
+                .background(.backgroundThemeRespectable, in: RoundedRectangle(cornerRadius: 10))
+                .padding()
+        )
     }
 
     @MainActor
@@ -25,16 +41,7 @@ public struct ShowNextCountdownIntent: AppIntent {
         return try? context.fetch(descriptor).first
     }
 
-    private static func remainingText(until date: Date) -> String {
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.day, .hour, .minute]
-        formatter.unitsStyle = .full
-        formatter.maximumUnitCount = 2
-
-        guard let text = formatter.string(from: Date.now, to: date) else {
-            return "coming up soon"
-        }
-
-        return "in \(text)"
+    private static func remainingText(item: CountdownItem) -> String {
+        return "in approximately \(item.getTimeRemainingFn())"
     }
 }
