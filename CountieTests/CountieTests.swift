@@ -12,6 +12,33 @@ import Testing
 @testable import Countie
 
 struct CountieTests {
+    @MainActor
+    @Test func countdownShareRendererCreatesNineBySixteenPNG() async throws {
+        let now = Date(timeIntervalSince1970: 1_750_000_000)
+        let countdown = CountdownItem(
+            name: "Launch Day",
+            date: now.addingTimeInterval(90_061),
+            iconName: "rocket.fill",
+            color: .orange
+        )
+        countdown.countSince = now.addingTimeInterval(-3_600)
+
+        let image = try #require(
+            CountdownShareRenderer.render(
+                countdown: countdown,
+                now: now,
+                colorScheme: .light,
+                locale: Locale(identifier: "en_US")
+            )
+        )
+        let cgImage = try #require(image.cgImage)
+        let pngData = try #require(image.pngData())
+
+        #expect(cgImage.width == CountdownShareRenderer.outputWidth)
+        #expect(cgImage.height == CountdownShareRenderer.outputHeight)
+        #expect(!pngData.isEmpty)
+    }
+
     @Test func calendarLinkDetailsRoundTripsThroughCodable() async throws {
         let details = CalendarEventLinkDetails(
             eventIdentifier: "event-1",
@@ -40,7 +67,7 @@ struct CountieTests {
         #expect(item.countSince >= beforeCreate)
         #expect(item.countSince <= afterCreate)
         #expect(item.iconName == CountdownEventIcon.default)
-        #expect(item.color == Color.blue)
+        #expect(item.color == .blue)
     }
 
     @MainActor

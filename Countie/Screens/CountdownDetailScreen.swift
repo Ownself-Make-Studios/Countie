@@ -6,12 +6,15 @@
 //
 
 import AppIntents
-import SwiftUI
 import ConfettiSwiftUI
+import SwiftUI
+import UIKit
 
 struct CountdownDetailView: View {
     @EnvironmentObject private var countdownStore: CountdownStore
+    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.locale) private var locale
 
     private let countdown: CountdownItem
     private let onClose: (() -> Void)?
@@ -21,6 +24,9 @@ struct CountdownDetailView: View {
     @State private var timer: Timer?
     @State private var confettiTrigger = 0
     @State private var hasCelebratedCompletion = false
+    @State private var isShareErrorPresented = false
+    @State private var isShareSheetPresented = false
+    @State private var sharedFileURL: URL?
 
     private var confettiContent: [ConfettiType] {
         [
@@ -36,18 +42,15 @@ struct CountdownDetailView: View {
     }
 
     private var remainingValues: [CountdownRemainingValue] {
-        let components = Calendar.autoupdatingCurrent.dateComponents(
-            [.day, .hour, .minute, .second],
-            from: now,
-            to: countdown.date
-        )
+        countdownRemainingValues(from: now, to: countdown.date)
+    }
 
-        return [
-            CountdownRemainingValue(value: max(0, components.day ?? 0), unit: "days"),
-            CountdownRemainingValue(value: max(0, components.hour ?? 0), unit: "hours"),
-            CountdownRemainingValue(value: max(0, components.minute ?? 0), unit: "minutes"),
-            CountdownRemainingValue(value: max(0, components.second ?? 0), unit: "seconds"),
-        ]
+    private var progress: Float {
+        countdownProgress(
+            countSince: countdown.countSince,
+            targetDate: countdown.date,
+            now: now
+        )
     }
 
     init(countdown: CountdownItem, onClose: (() -> Void)? = nil) {
@@ -60,7 +63,11 @@ struct CountdownDetailView: View {
             CountdownDetailBackground(tint: countdown.eventTintColor)
 
             CountdownDetailContent(
-                countdown: countdown,
+                iconName: countdown.resolvedIconName,
+                tint: countdown.eventTintColor,
+                progress: progress,
+                name: countdown.name,
+                formattedDateTime: countdown.formattedDateTimeString,
                 remainingValues: remainingValues
             )
             .toolbar {
@@ -88,16 +95,42 @@ struct CountdownDetailView: View {
             handleNowChange(newValue)
         }
         .onDisappear(perform: stopTimer)
+        .sheet(
+            isPresented: $isShareSheetPresented,
+            onDismiss: removeSharedFile
+        ) {
+            if let sharedFileURL {
+                CountdownActivityView(
+                    fileURL: sharedFileURL,
+                    isPresented: $isShareSheetPresented
+                )
+            }
+        }
+        .alert(
+            "Unable to Share Countdown",
+            isPresented: $isShareErrorPresented
+        ) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("The countdown image could not be created. Please try again.")
+        }
         .userActivity("com.nabilridhwan.countie.countdown", element: countdown.id) { _, activity in
             activity.title = countdown.name
             activity.appEntityIdentifier = CountdownEntityContext.identifier(for: countdown)
         }
         .toolbar {
             ToolbarItem {
+                Button(action: shareCountdown) {
+                    Label("Share Countdown", systemImage: "square.and.arrow.up")
+                        .labelStyle(.titleAndIcon)
+                }
+            }
+
+            ToolbarItem {
                 Button(action: presentDeleteConfirmation) {
                     Label("Delete", systemImage: "trash")
                         .labelStyle(.titleAndIcon)
-                        .foregroundColor(.red)
+                        .foregroundStyle(.red)
                 }
                 .confirmationDialog(
                     "Are you sure you want to delete this countdown?",
@@ -123,6 +156,47 @@ struct CountdownDetailView: View {
 
     private func presentDeleteConfirmation() {
         isConfirmDeletePresented = true
+    }
+
+    @MainActor
+    private func shareCountdown() {
+        removeSharedFile()
+
+        guard let image = CountdownShareRenderer.render(
+            countdown: countdown,
+            now: now,
+            colorScheme: colorScheme,
+            locale: locale
+        ), let pngData = image.pngData() else {
+            isShareErrorPresented = true
+            return
+        }
+
+        do {
+            let directory = FileManager.default.temporaryDirectory
+                .appending(path: "CountieShare", directoryHint: .isDirectory)
+            try FileManager.default.createDirectory(
+                at: directory,
+                withIntermediateDirectories: true
+            )
+
+            let fileURL = directory.appending(
+                path: "countie-\(countdown.id.uuidString).png",
+                directoryHint: .notDirectory
+            )
+            try pngData.write(to: fileURL, options: .atomic)
+
+            sharedFileURL = fileURL
+            isShareSheetPresented = true
+        } catch {
+            isShareErrorPresented = true
+        }
+    }
+
+    private func removeSharedFile() {
+        guard let sharedFileURL else { return }
+        try? FileManager.default.removeItem(at: sharedFileURL)
+        self.sharedFileURL = nil
     }
 
     private func deleteCountdown() {
@@ -182,17 +256,25 @@ private struct CountdownDetailBackground: View {
 }
 
 private struct CountdownDetailContent: View {
-    let countdown: CountdownItem
+    let iconName: String
+    let tint: Color
+    let progress: Float
+    let name: String
+    let formattedDateTime: String
     let remainingValues: [CountdownRemainingValue]
 
     var body: some View {
         VStack {
-            CountdownHeroSection(countdown: countdown)
+            CountdownHeroSection(
+                iconName: iconName,
+                tint: tint,
+                progress: progress
+            )
                 .padding(.bottom, 40)
 
             CountdownInfoSection(
-                name: countdown.name,
-                formattedDateTime: countdown.formattedDateTimeString,
+                name: name,
+                formattedDateTime: formattedDateTime,
                 remainingValues: remainingValues
             )
         }
@@ -200,13 +282,15 @@ private struct CountdownDetailContent: View {
 }
 
 private struct CountdownHeroSection: View {
-    let countdown: CountdownItem
+    let iconName: String
+    let tint: Color
+    let progress: Float
 
     var body: some View {
         CircularEventIconView(
-            iconName: countdown.resolvedIconName,
-            tint: countdown.eventTintColor,
-            progress: Float(countdown.progress),
+            iconName: iconName,
+            tint: tint,
+            progress: progress,
             showProgress: true,
             width: 200,
             brightness: 0.3,
@@ -296,10 +380,162 @@ private struct CountdownTimeUnitCard: View {
 
             Text(unit)
                 .font(.caption2)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
                 .frame(minWidth: 36)
         }
     }
+}
+
+@MainActor
+enum CountdownShareRenderer {
+    static let outputWidth = 1_080
+    static let outputHeight = 1_920
+
+    static func render(
+        countdown: CountdownItem,
+        now: Date,
+        colorScheme: ColorScheme,
+        locale: Locale
+    ) -> UIImage? {
+        let artwork = CountdownShareArtwork(
+            iconName: countdown.resolvedIconName,
+            tint: countdown.eventTintColor,
+            progress: countdownProgress(
+                countSince: countdown.countSince,
+                targetDate: countdown.date,
+                now: now
+            ),
+            name: countdown.name,
+            formattedDateTime: countdown.formattedDateTimeString,
+            remainingValues: countdownRemainingValues(
+                from: now,
+                to: countdown.date
+            )
+        )
+        .environment(\.colorScheme, colorScheme)
+        .environment(\.locale, locale)
+
+        let renderer = ImageRenderer(content: artwork)
+        renderer.proposedSize = ProposedViewSize(width: 360, height: 640)
+        renderer.scale = 3
+        renderer.isOpaque = true
+        return renderer.uiImage
+    }
+}
+
+private struct CountdownShareArtwork: View {
+    let iconName: String
+    let tint: Color
+    let progress: Float
+    let name: String
+    let formattedDateTime: String
+    let remainingValues: [CountdownRemainingValue]
+
+    var body: some View {
+        ZStack {
+            CountdownDetailBackground(tint: tint)
+
+            VStack(spacing: 8) {
+                Spacer(minLength: 0)
+
+                CountdownDetailContent(
+                    iconName: iconName,
+                    tint: tint,
+                    progress: progress,
+                    name: name,
+                    formattedDateTime: formattedDateTime,
+                    remainingValues: remainingValues
+                )
+
+                Spacer(minLength: 0)
+
+                CountdownShareBranding()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+        }
+        .frame(width: 360, height: 640)
+        .clipped()
+    }
+}
+
+private struct CountdownShareBranding: View {
+    var body: some View {
+        Image("OnboardingLogo")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 28, height: 28)
+            .accessibilityHidden(true)
+    }
+}
+
+private struct CountdownActivityView: UIViewControllerRepresentable {
+    let fileURL: URL
+    @Binding var isPresented: Bool
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(isPresented: $isPresented)
+    }
+
+    func makeUIViewController(context: Context) -> UIActivityViewController {
+        let controller = UIActivityViewController(
+            activityItems: [fileURL],
+            applicationActivities: nil
+        )
+        controller.completionWithItemsHandler = { _, _, _, _ in
+            context.coordinator.dismiss()
+        }
+        return controller
+    }
+
+    func updateUIViewController(
+        _ uiViewController: UIActivityViewController,
+        context: Context
+    ) {}
+
+    final class Coordinator {
+        private let isPresented: Binding<Bool>
+
+        init(isPresented: Binding<Bool>) {
+            self.isPresented = isPresented
+        }
+
+        func dismiss() {
+            Task { @MainActor in
+                isPresented.wrappedValue = false
+            }
+        }
+    }
+}
+
+private func countdownRemainingValues(
+    from now: Date,
+    to targetDate: Date
+) -> [CountdownRemainingValue] {
+    let components = Calendar.autoupdatingCurrent.dateComponents(
+        [.day, .hour, .minute, .second],
+        from: now,
+        to: targetDate
+    )
+
+    return [
+        CountdownRemainingValue(value: max(0, components.day ?? 0), unit: "days"),
+        CountdownRemainingValue(value: max(0, components.hour ?? 0), unit: "hours"),
+        CountdownRemainingValue(value: max(0, components.minute ?? 0), unit: "minutes"),
+        CountdownRemainingValue(value: max(0, components.second ?? 0), unit: "seconds"),
+    ]
+}
+
+private func countdownProgress(
+    countSince: Date,
+    targetDate: Date,
+    now: Date
+) -> Float {
+    let total = targetDate.timeIntervalSince(countSince)
+    guard total > 0 else { return 1 }
+
+    let elapsed = now.timeIntervalSince(countSince)
+    return Float(min(max(elapsed / total, 0), 1))
 }
 
 #Preview {
