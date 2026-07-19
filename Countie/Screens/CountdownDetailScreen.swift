@@ -5,6 +5,7 @@
 //  Created by Nabil Ridhwan on 24/7/25.
 //
 
+import AppIntents
 import SwiftUI
 import ConfettiSwiftUI
 
@@ -87,6 +88,10 @@ struct CountdownDetailView: View {
             handleNowChange(newValue)
         }
         .onDisappear(perform: stopTimer)
+        .userActivity("com.nabilridhwan.countie.countdown", element: countdown.id) { _, activity in
+            activity.title = countdown.name
+            activity.appEntityIdentifier = CountdownEntityContext.identifier(for: countdown)
+        }
         .toolbar {
             ToolbarItem {
                 Button(action: presentDeleteConfirmation) {

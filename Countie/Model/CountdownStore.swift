@@ -11,8 +11,8 @@ import SwiftData
 import SwiftUI
 import WidgetKit
 import AppIntents
-import AppIntents
 
+@MainActor
 class CountdownStore: ObservableObject {
     private var eventStore = EKEventStore()
     private var cancellables: [NSObjectProtocol] = []
@@ -67,10 +67,12 @@ class CountdownStore: ObservableObject {
             object: self.eventStore,
             queue: .main
         ) { [weak self] _ in
-            guard let self else { return }
-            self.syncCountdownsWithEvents()
-            WidgetCenter.shared.reloadAllTimelines()
-            CountieShortcuts.updateAppShortcutParameters()
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.syncCountdownsWithEvents()
+                WidgetCenter.shared.reloadAllTimelines()
+                CountieShortcuts.updateAppShortcutParameters()
+            }
         }
         cancellables.append(token)
     }

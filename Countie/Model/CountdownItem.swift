@@ -207,17 +207,30 @@ extension CountdownItem {
         let interval = date.timeIntervalSince(since)
 
         if isToday {
-            return "Today"
+            return String(localized: "Today")
         }
 
         if interval > 0 {
             let daysLeft = calendar.dateComponents([.day], from: startOfSince, to: startOfDate).day ?? 0
-            if daysLeft > 0 { return "\(daysLeft) day" + (daysLeft > 1 ? "s" : "") }
+            if daysLeft > 0 {
+                return Self.localizedDayCount(daysLeft)
+            }
             return getTimeRemainingString(since: since, units: [.hour])
         } else {
             let daysAgo = calendar.dateComponents([.day], from: startOfDate, to: startOfSince).day ?? 0
-            return "\(daysAgo) day" + (daysAgo != 1 ? "s" : "") + " ago"
+            let dayCount = Self.localizedDayCount(daysAgo)
+            return String(
+                localized: "\(dayCount) ago",
+                comment: "A localized duration since a countdown ended."
+            )
         }
+    }
+
+    private static func localizedDayCount(_ count: Int) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.day]
+        formatter.unitsStyle = .full
+        return formatter.string(from: DateComponents(day: count)) ?? "\(count)"
     }
 
     func getTimeRemainingString(
@@ -229,7 +242,12 @@ extension CountdownItem {
         formatter.allowedUnits = units
         formatter.unitsStyle = unitsStyle
         guard let text = formatter.string(from: since, to: date) else { return "?" }
-        return text.hasPrefix("-") ? "\(text.dropFirst()) ago" : text
+        return text.hasPrefix("-")
+            ? String(
+                localized: "\(text.dropFirst()) ago",
+                comment: "A localized duration since a countdown ended."
+            )
+            : text
     }
 
     var progress: Double {
@@ -268,17 +286,10 @@ extension CountdownItem {
     }
 
     var formattedDateString: String {
-        let df = DateFormatter()
-        df.dateStyle = .long
-        df.timeStyle = .none
-        return df.string(from: date)
+        date.formatted(date: .long, time: .omitted)
     }
 
     var formattedDateTimeString: String {
-        let df = DateFormatter()
-        df.dateStyle = .long
-        df.timeStyle = .short
-        return df.string(from: date)
+        date.formatted(date: .long, time: .shortened)
     }
 }
-

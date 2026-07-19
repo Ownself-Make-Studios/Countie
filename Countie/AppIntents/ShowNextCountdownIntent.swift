@@ -5,7 +5,7 @@ import SwiftUI
 
 struct NoUpcomingCountdownError: LocalizedError {
     var errorDescription: String? {
-        "You don't have any upcoming countdowns."
+        String(localized: "You don't have any upcoming countdowns.")
     }
 }
 
@@ -42,6 +42,9 @@ public struct ShowNextCountdownIntent: AppIntent {
     }
 
     private static func remainingText(item: CountdownItem) -> String {
-        return "in approximately \(item.getTimeRemainingFn())"
+        String(
+            localized: "in approximately \(item.getTimeRemainingFn())",
+            comment: "Approximate time remaining before the next countdown ends."
+        )
     }
 }

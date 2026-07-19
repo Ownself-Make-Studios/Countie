@@ -8,12 +8,16 @@
 import SwiftUI
 
 struct CountdownListView: View {
+    @EnvironmentObject private var countdownStore: CountdownStore
     @EnvironmentObject private var sheetStore: SheetStore
 
     let countdowns: [CountdownItem]
     let onClose: (() -> Void)?
 
     @State private var searchText = ""
+    @State private var countdownToEdit: CountdownItem?
+    @State private var countdownToDelete: CountdownItem?
+    @State private var isDeleteConfirmationPresented = false
 
     private var filteredCountdowns: [CountdownItem] {
         guard !searchText.isEmpty else {
@@ -38,12 +42,6 @@ struct CountdownListView: View {
         countdownsByMonth.keys.sorted()
     }
 
-    private var monthYearFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "LLLL yyyy"
-        return formatter
-    }
-
     init(
         countdowns: [CountdownItem],
         onClose: (() -> Void)? = nil
@@ -59,8 +57,9 @@ struct CountdownListView: View {
                     CountdownMonthSection(
                         month: month,
                         items: countdownsByMonth[month] ?? [],
-                        monthYearFormatter: monthYearFormatter,
-                        onSelectCountdown: selectCountdown
+                        onSelectCountdown: selectCountdown,
+                        onEditCountdown: editCountdown,
+                        onDeleteCountdown: presentDeleteConfirmation
                     )
                 }
             }
@@ -68,21 +67,54 @@ struct CountdownListView: View {
             .listRowSeparator(.hidden)
             .searchable(text: $searchText, prompt: "Search countdowns")
         }
+        .sheet(item: $countdownToEdit) { countdown in
+            AddCountdownView(countdownToEdit: countdown)
+        }
+        .alert(
+            "Delete Countdown?",
+            isPresented: $isDeleteConfirmationPresented,
+            presenting: countdownToDelete
+        ) { countdown in
+            Button("Delete", role: .destructive) {
+                deleteCountdown(countdown)
+            }
+            Button("Cancel", role: .cancel) {
+                countdownToDelete = nil
+            }
+        } message: { countdown in
+            Text("“\(countdown.name)” will be removed from your countdowns.")
+        }
     }
 
     private func selectCountdown(_ countdown: CountdownItem) {
         sheetStore.isSelectedCountdown = countdown
+    }
+
+    private func editCountdown(_ countdown: CountdownItem) {
+        countdownToEdit = countdown
+    }
+
+    private func presentDeleteConfirmation(_ countdown: CountdownItem) {
+        countdownToDelete = countdown
+        isDeleteConfirmationPresented = true
+    }
+
+    private func deleteCountdown(_ countdown: CountdownItem) {
+        countdownStore.deleteCountdown(countdown)
+        countdownToDelete = nil
+        onClose?()
     }
 }
 
 private struct CountdownMonthSection: View {
     let month: Date
     let items: [CountdownItem]
-    let monthYearFormatter: DateFormatter
     let onSelectCountdown: (CountdownItem) -> Void
+    let onEditCountdown: (CountdownItem) -> Void
+    let onDeleteCountdown: (CountdownItem) -> Void
 
     var body: some View {
-        Section(header: Text(month, formatter: monthYearFormatter)) {
+        Section(header: Text(month, format: .dateTime.month(.wide).year())) {
             if items.isEmpty {
                 EmptyCountdownMonthRow(month: month)
             } else {
@@ -93,6 +125,21 @@ private struct CountdownMonthSection: View {
                     )
                     .listRowSeparator(.hidden)
                     .listRowInsets(.init(top: 15, leading: 15, bottom: 15, trailing: 15))
+                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                        Button {
+                            onDeleteCountdown(countdown)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                        .tint(.red)
+
+                        Button {
+                            onEditCountdown(countdown)
+                        } label: {
+                            Label("Edit", systemImage: "square.and.pencil")
+                        }
+                        .tint(.orange)
+                    }
                 }
             }
         }

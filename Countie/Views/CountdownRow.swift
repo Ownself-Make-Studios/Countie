@@ -6,6 +6,7 @@
 //
 
 internal import Combine
+import AppIntents
 import SwiftUI
 
 struct CountdownRow: View {
@@ -80,6 +81,7 @@ struct CountdownRow: View {
             }
         }
         .padding(.vertical, 6)
+        .appEntityIdentifier(CountdownEntityContext.identifier(for: item))
         .opacity(countdownHasEnded ? 0.5 : 1.0)
         .onAppear {
             if !countdownHasEnded {

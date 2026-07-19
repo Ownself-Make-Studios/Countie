@@ -15,6 +15,7 @@ public struct OpenCountdownIntent: OpenIntent, TargetContentProvidingIntent {
 
     @MainActor
     public func perform() async throws -> some IntentResult {
+        AppIntentNavigationStore.requestOpenCountdown(id: target.id)
         return .result()
     }
 }
