@@ -44,12 +44,14 @@ struct CreateCountdownIntent: AppIntent {
         guard !trimmedName.isEmpty else {
             throw $name.needsValueError("What should the countdown be called?")
         }
+        
+        let randomColor = CountdownEventColor.allCases.randomElement()!
 
         let item = CountdownItem(
             name: trimmedName,
             date: date,
             iconName: CountdownEventIcon.default,
-            color: .blue
+            color: randomColor
         )
 
         let context = CountieModelContainer.sharedModelContainer.mainContext
