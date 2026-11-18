@@ -4,11 +4,16 @@ import SwiftData
 import WidgetKit
 import CoreSpotlight
 
+@available(iOS 27.3, *)
+@AppIntent(.tool)
 public struct DeleteCountdownIntent: AppIntent {
     public static var title: LocalizedStringResource = "Delete Countdown"
     public static var description = IntentDescription("Deletes a countdown from Countie.")
 
-    @Parameter(title: "Countdown")
+    @Parameter(
+        title: "Countdown",
+        description: LocalizedStringResource("Which countdown to delete?")
+    )
     public var countdown: CountdownEntity
 
     public static var parameterSummary: some ParameterSummary {

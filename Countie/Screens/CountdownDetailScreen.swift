@@ -114,9 +114,11 @@ struct CountdownDetailView: View {
         } message: {
             Text("The countdown image could not be created. Please try again.")
         }
+        
+        // Label the activity for
         .userActivity("com.nabilridhwan.countie.countdown", element: countdown.id) { _, activity in
             activity.title = countdown.name
-            activity.appEntityIdentifier = CountdownEntityContext.identifier(for: countdown)
+            activity.appEntityIdentifier = EntityIdentifier(for: CountdownEntity(item: countdown))
         }
         .toolbar {
             ToolbarItem {

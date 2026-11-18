@@ -3,6 +3,7 @@ import UIKit
 import Foundation
 import SwiftData
 import CoreSpotlight
+import SwiftUI
 
 public struct CountdownEntity: IndexedEntity {
     public static var typeDisplayRepresentation = TypeDisplayRepresentation(
@@ -56,6 +57,16 @@ public struct CountdownEntity: IndexedEntity {
     }
 }
 
+// MARK: Card Snippet for CountdownEntity
+@available(iOS 27.3, *)
+extension CountdownEntity: SnippetRepresentableEntity {
+    public static var snippet: some Snippet {
+        CardSnippet(supportedFamilies: [.standard]) { countdownEntity, context in
+            CountdownRow(entity: countdownEntity)
+        }
+    }
+}
+
 public struct CountdownEntityQuery: EntityStringQuery {
     public init() {}
 
@@ -94,18 +105,41 @@ public struct CountdownEntityQuery: EntityStringQuery {
     }
 }
 
-enum CountdownEntityContext {
-    @MainActor
-    static func identifier(for item: CountdownItem) -> EntityIdentifier {
-        if #available(iOS 27.0, *) {
-            EntityIdentifier(for: CountieCalendarEventEntity(item: item))
-        } else {
-            EntityIdentifier(for: CountdownEntity(item: item))
+@available(iOS 27.0, *)
+extension CountdownEntityQuery: IndexedEntityQuery {
+    public func reindexEntities(
+            for identifiers: [CountdownEntity.ID],
+            indexDescription: CSSearchableIndexDescription
+        ) async throws {
+            let entities = try await entities(for: identifiers)
+            CountdownSearchIndex.indexAppEntities(entities)
         }
-    }
+
+        @MainActor
+        public func reindexAllEntities(
+            indexDescription: CSSearchableIndexDescription
+        ) async throws {
+            let context = CountieModelContainer.sharedModelContainer.mainContext
+            let descriptor = CountdownItem.appEntityDescriptor(includePast: true)
+            let items = try context.fetch(descriptor)
+            let entities = items.map { CountdownEntity(item: $0) }
+            CountdownSearchIndex.indexAppEntities(entities)
+        }
 }
 
 enum CountdownSearchIndex {
+    static func indexAppEntities(_ entities: [CountdownEntity]) {
+        
+        Task {
+            do {
+                try await CSSearchableIndex.default().indexAppEntities(entities)
+            } catch {
+                print("Failed to index countdowns: \(error)")
+            }
+        }
+        
+    }
+    
     static func index(_ item: CountdownItem) {
         let entity = CountdownEntity(item: item)
 
@@ -127,171 +161,6 @@ enum CountdownSearchIndex {
                 )
             } catch {
                 print("Failed to delete indexed countdown: \(error)")
-            }
-        }
-    }
-}
-
-// MARK: - iOS 27 Calendar schema
-
-@available(iOS 27.0, *)
-@AppEntity(schema: .calendar.calendar)
-struct CountieCalendarEntity {
-    static let defaultQuery = CountieCalendarEntityQuery()
-
-    let id: String
-    var title: String
-
-    var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(
-            title: "\(title)",
-            image: .init(systemName: "calendar")
-        )
-    }
-
-    init() {
-        id = "countie"
-        title = "Countie"
-    }
-
-    struct CountieCalendarEntityQuery: EntityQuery {
-        func entities(for identifiers: [String]) async throws -> [CountieCalendarEntity] {
-            identifiers.contains("countie") ? [CountieCalendarEntity()] : []
-        }
-    }
-}
-
-@available(iOS 27.0, *)
-@AppEnum(schema: .calendar.attendeeStatus)
-enum CountieAttendeeStatus: String {
-    case pending
-    case accepted
-    case declined
-    case tentative
-
-    static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
-        .pending: "Pending",
-        .accepted: "Accepted",
-        .declined: "Declined",
-        .tentative: "Tentative"
-    ]
-}
-
-@available(iOS 27.0, *)
-@AppEnum(schema: .calendar.attendeeType)
-enum CountieAttendeeType: String {
-    case person
-
-    static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
-        .person: "Person"
-    ]
-}
-
-@available(iOS 27.0, *)
-@AppEntity(schema: .calendar.attendee)
-struct CountieAttendeeEntity {
-    static let defaultQuery = CountieAttendeeEntityQuery()
-
-    let id: String
-    var person: IntentPerson
-    var status: CountieAttendeeStatus?
-    var isAttendanceOptional: Bool
-    var type: CountieAttendeeType?
-
-    var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(title: "\(person)")
-    }
-
-    struct CountieAttendeeEntityQuery: EntityQuery {
-        func entities(for identifiers: [String]) async throws -> [CountieAttendeeEntity] {
-            []
-        }
-    }
-}
-
-@available(iOS 27.0, *)
-@AppEnum(schema: .calendar.eventStatus)
-enum CountieEventStatus: String {
-    case confirmed
-    case tentative
-    case cancelled
-
-    static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
-        .confirmed: "Confirmed",
-        .tentative: "Tentative",
-        .cancelled: "Cancelled"
-    ]
-}
-
-@available(iOS 27.0, *)
-@UnionValue
-enum CountieEventLocation {
-    case name(String)
-}
-
-@available(iOS 27.0, *)
-@UnionValue
-enum CountieEventAlarm {
-    case relative(Duration)
-    case absolute(Date)
-}
-
-@available(iOS 27.0, *)
-@AppEntity(schema: .calendar.event)
-struct CountieCalendarEventEntity {
-    static let defaultQuery = CountieCalendarEventEntityQuery()
-
-    let id: String
-    var calendar: CountieCalendarEntity
-    var title: String
-    var startDate: Date
-    var endDate: Date
-    var isAllDay: Bool
-    var recurrence: Calendar.RecurrenceRule?
-    var note: AttributedString?
-    var travelTime: Duration?
-    var location: CountieEventLocation?
-    var virtualLocation: URL?
-    var status: CountieEventStatus?
-    var alarms: [CountieEventAlarm]
-    var organizers: [IntentPerson]
-    var attendees: [CountieAttendeeEntity]
-
-    var displayRepresentation: DisplayRepresentation {
-        DisplayRepresentation(
-            title: "\(title)",
-            subtitle: "\(startDate.formatted(date: .abbreviated, time: .shortened))",
-            image: .init(systemName: "calendar.badge.clock")
-        )
-    }
-
-    init(item: CountdownItem) {
-        id = item.id.uuidString
-        calendar = CountieCalendarEntity()
-        title = item.name
-        startDate = item.date
-        endDate = item.date
-        isAllDay = false
-        recurrence = nil
-        note = nil
-        travelTime = nil
-        location = nil
-        virtualLocation = nil
-        status = .confirmed
-        alarms = []
-        organizers = []
-        attendees = []
-    }
-
-    struct CountieCalendarEventEntityQuery: EntityQuery {
-        func entities(for identifiers: [String]) async throws -> [CountieCalendarEventEntity] {
-            try await MainActor.run {
-                let identifierSet = Set(identifiers)
-                let descriptor = CountdownItem.appEntityDescriptor(includePast: true)
-                let items = try CountieModelContainer.sharedModelContainer.mainContext.fetch(descriptor)
-                return items
-                    .filter { identifierSet.contains($0.id.uuidString) }
-                    .map(CountieCalendarEventEntity.init(item:))
             }
         }
     }

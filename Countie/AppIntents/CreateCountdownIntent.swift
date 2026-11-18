@@ -11,31 +11,35 @@ import SwiftData
 import WidgetKit
 import CoreSpotlight
 
-public struct CreateCountdownIntent: AppIntent {
-    public static var title: LocalizedStringResource = "Create Countdown"
-    public static var description = IntentDescription("Creates a new countdown in Countie.")
+@available(iOS 27.3, *)
+@AppIntent(.tool)
+struct CreateCountdownIntent: AppIntent {
+    // Empty init
+    public init(){}
+    
+    static let title: LocalizedStringResource = "Create Countdown"
+    static let description = IntentDescription("Creates a new countdown")
 
     @Parameter(
-        title: "Countdown Name",
+        title: "Name",
+        description: LocalizedStringResource("The name of the countdown"),
         requestValueDialog: "What is the countdown for?"
     )
-    public var name: String
+    var name: String
 
     @Parameter(
         title: "Countdown Date",
+        description: LocalizedStringResource("When is the countdown for?"),
         requestValueDialog: "When is it?"
     )
-    public var date: Date
-
+    var date: Date
 
     public static var parameterSummary: some ParameterSummary {
         Summary("Create \(\.$name) for \(\.$date)")
     }
 
-    public init() {}
-
     @MainActor
-    public func perform() async throws -> some IntentResult & ProvidesDialog {
+    func perform() async throws -> some IntentResult & ReturnsValue<CountdownEntity>{
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmedName.isEmpty else {
             throw $name.needsValueError("What should the countdown be called?")
@@ -52,11 +56,10 @@ public struct CreateCountdownIntent: AppIntent {
         context.insert(item)
         try context.save()
         
-        
         CountdownSearchIndex.index(item)
         WidgetCenter.shared.reloadAllTimelines()
         CountieShortcuts.updateAppShortcutParameters()
 
-        return .result(dialog: "Created \(trimmedName).")
+        return .result(value: CountdownEntity(item: item))
     }
 }
