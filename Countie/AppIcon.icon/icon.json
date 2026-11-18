@@ -1,44 +1,61 @@
 {
   "features" : [
-    "refractivity"
+    "refractivity",
+    "specular-location"
   ],
   "fill" : {
-    "solid" : "display-p3:0.56863,1.00000,0.55854,1.00000"
+    "linear-gradient" : [
+      "display-p3:0.99618,1.00000,0.96647,1.00000",
+      "display-p3:1.00000,0.93309,0.91164,1.00000"
+    ]
   },
   "groups" : [
     {
-      "blur-material" : 0.37,
+      "blend-mode" : "normal",
+      "blur-material" : 1,
       "layers" : [
         {
-          "blend-mode-specializations" : [
-            {
-              "appearance" : "tinted",
-              "value" : "normal"
-            }
-          ],
-          "fill-specializations" : [
-            {
-              "value" : {
-                "solid" : "display-p3:0.00000,0.00000,0.00000,1.00000"
-              }
-            },
-            {
-              "appearance" : "dark",
-              "value" : {
-                "solid" : "display-p3:0.56768,1.00000,0.55854,1.00000"
-              }
-            },
-            {
-              "appearance" : "tinted",
-              "value" : {
-                "solid" : "display-p3:0.56768,1.00000,0.55854,1.00000"
-              }
-            }
-          ],
-          "image-name" : "countie-logo.svg",
-          "name" : "countie-logo",
+          "glass" : true,
+          "image-name" : "Frame 2 2.png",
+          "name" : "Frame 2 2",
           "position" : {
-            "scale" : 2.68,
+            "scale" : 0.58,
+            "translation-in-points" : [
+              0,
+              -296
+            ]
+          }
+        },
+        {
+          "glass" : true,
+          "image-name" : "Frame 9 2.png",
+          "name" : "Frame 9 2",
+          "position" : {
+            "scale" : 0.58,
+            "translation-in-points" : [
+              0,
+              -15
+            ]
+          }
+        },
+        {
+          "blend-mode" : "normal",
+          "fill" : "none",
+          "image-name" : "Rectangle 2 2.png",
+          "name" : "Rectangle 2 2",
+          "position" : {
+            "scale" : 0.58,
+            "translation-in-points" : [
+              0,
+              -219
+            ]
+          }
+        },
+        {
+          "image-name" : "Group 23 2.png",
+          "name" : "Group 23 2",
+          "position" : {
+            "scale" : 0.58,
             "translation-in-points" : [
               0,
               0
@@ -46,19 +63,21 @@
           }
         }
       ],
+      "lighting" : "individual",
+      "name" : "Group",
       "refractivity" : {
         "depth" : 0,
         "enabled" : true,
         "strength" : 1
       },
       "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.63
+        "kind" : "layer-color",
+        "opacity" : 0.8
       },
-      "specular" : true,
+      "specular" : "outside",
       "translucency" : {
         "enabled" : true,
-        "value" : 0.33
+        "value" : 0.21
       }
     }
   ],
