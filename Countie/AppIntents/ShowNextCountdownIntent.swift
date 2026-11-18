@@ -9,6 +9,8 @@ struct NoUpcomingCountdownError: LocalizedError {
     }
 }
 
+@available(iOS 27.3, *)
+@AppIntent(.tool)
 public struct ShowNextCountdownIntent: AppIntent {
     public static var title: LocalizedStringResource = "Show Next Countdown"
     public static var description = IntentDescription("Shows your next upcoming countdown.")
@@ -16,21 +18,16 @@ public struct ShowNextCountdownIntent: AppIntent {
     public init() {}
 
     @MainActor
-    public func perform() async throws -> some ReturnsValue<CountdownEntity> & ProvidesDialog & ShowsSnippetView {
+    public func perform() async throws -> some ReturnsValue<CountdownEntity> {
         guard let item = nextCountdown() else {
             throw NoUpcomingCountdownError()
         }
 
-        let remainingText = Self.remainingText(item: item)
+//        let remainingText = Self.remainingText(item: item)
         let entity = CountdownEntity(item: item)
         
         return .result(
             value: entity,
-            dialog: "Your next countdown is \(item.name), \(remainingText).",
-            view: CountdownRow(item: item)
-                .padding()
-                .background(.backgroundThemeRespectable, in: RoundedRectangle(cornerRadius: 10))
-                .padding()
         )
     }
 
@@ -41,10 +38,10 @@ public struct ShowNextCountdownIntent: AppIntent {
         return try? context.fetch(descriptor).first
     }
 
-    private static func remainingText(item: CountdownItem) -> String {
-        String(
-            localized: "in approximately \(item.getTimeRemainingFn())",
-            comment: "Approximate time remaining before the next countdown ends."
-        )
-    }
+//    private static func remainingText(item: CountdownItem) -> String {
+//        String(
+//            localized: "in approximately \(item.getTimeRemainingFn())",
+//            comment: "Approximate time remaining before the next countdown ends."
+//        )
+//    }
 }

@@ -34,15 +34,15 @@ public struct CountieShortcuts: AppShortcutsProvider {
             systemImageName: "calendar"
         )
 
-        AppShortcut(
-            intent: ShowNextCountdownIntent(),
-            phrases: [
-                "Show my next countdown in \(.applicationName)",
-                "What's my next countdown in \(.applicationName)"
-            ],
-            shortTitle: "Next Countdown",
-            systemImageName: "calendar.badge.clock"
-        )
+//        AppShortcut(
+//            intent: ShowNextCountdownIntent(),
+//            phrases: [
+//                "Show my next countdown in \(.applicationName)",
+//                "What's my next countdown in \(.applicationName)"
+//            ],
+//            shortTitle: "Next Countdown",
+//            systemImageName: "calendar.badge.clock"
+//        )
 
 //        AppShortcut(
 //            intent: DeleteCountdownIntent(),
