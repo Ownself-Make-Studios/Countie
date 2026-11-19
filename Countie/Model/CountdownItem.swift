@@ -201,29 +201,46 @@ extension CountdownItem {
 
     func getTimeRemainingFn(since: Date = .now) -> String {
         let calendar = Calendar.current
-        let startOfSince = calendar.startOfDay(for: since)
-        let startOfDate = calendar.startOfDay(for: date)
-        let isToday = calendar.isDate(startOfDate, inSameDayAs: startOfSince)
+        let startOfSince = since
+//        let startOfDate = calendar.startOfDay(for: date)
+//        let isToday = calendar.isDate(date, inSameDayAs: startOfSince)
         let interval = date.timeIntervalSince(since)
 
-        if isToday {
-            return String(localized: "Today")
-        }
-
+//        if isToday {
+//            return String(localized: "Today")
+//        }
+        
+        // If there is still time remaning
         if interval > 0 {
-            let daysLeft = calendar.dateComponents([.day], from: startOfSince, to: startOfDate).day ?? 0
-            if daysLeft > 0 {
+            let dateComponents = calendar.dateComponents([.day,.hour], from: startOfSince, to: date)
+            
+            let daysLeft = max(0, dateComponents.day ?? 0)
+            let hoursLeft = max(0, dateComponents.hour ?? 0)
+            
+            // If there is more than one day remaining, return the number of days
+            if daysLeft >= 1 {
                 return Self.localizedDayCount(daysLeft)
             }
+            
+            // If it is less than a day but the hours left is 0 (meaning event is < 1 Day AND < 1 hour)
+            // Tell the user that it's almost time
+            if hoursLeft == 0 {
+                return String(localized: "Almost time")
+            }
+            
+            // Otherwise just return how many hours left
             return getTimeRemainingString(since: since, units: [.hour])
-        } else {
-            let daysAgo = calendar.dateComponents([.day], from: startOfDate, to: startOfSince).day ?? 0
-            let dayCount = Self.localizedDayCount(daysAgo)
-            return String(
-                localized: "\(dayCount) ago",
-                comment: "A localized duration since a countdown ended."
-            )
         }
+        
+        
+        // If no time remaning, show "days ago" text
+        let daysAgo = calendar.dateComponents([.day], from: date, to: startOfSince).day ?? 0
+        let dayCount = Self.localizedDayCount(daysAgo)
+        return String(
+            localized: "\(dayCount) ago",
+            comment: "A localized duration since a countdown ended."
+        )
+        
     }
 
     private static func localizedDayCount(_ count: Int) -> String {
