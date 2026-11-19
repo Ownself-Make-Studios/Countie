@@ -81,15 +81,15 @@ private struct IconPickerSheet: View {
 
 private struct CountdownPreviewSection: View {
     let iconName: String
-    let color: Color
+    let color: CountdownEventColor
 
     var body: some View {
         HStack {
             Spacer()
             CircularEventIconView(
                 iconName: iconName,
-                tint: color,
-                progress: 0.75,
+                tint: color.color,
+                progress: 0,
                 showProgress: false,
                 width: 100,
                 iconSize: 42
@@ -123,11 +123,19 @@ private struct AppearanceSection: View {
                         .background(color.color.opacity(0.14), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
 
                     VStack(alignment: .leading, spacing: 2) {
+                        
+                        HStack(alignment: .center){
                         Text("Icon")
                             .foregroundStyle(.primary)
-                        Text("Selected: \(selectedIconLabel)")
+                        
+                        Spacer()
+                            
+                        Text("\(selectedIconLabel)")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+                        }
+                        .frame(maxWidth: .infinity)
+                        
                     }
 
                     Spacer()
@@ -198,7 +206,7 @@ private struct LinkedCalendarEventSection: View {
     }
 }
 
-private struct CountdownSettingsSection: View {
+private struct CountdownDateTimeSection: View {
     @Binding var countdownDate: Date
     @Binding var countSinceDate: Date
 
@@ -207,12 +215,21 @@ private struct CountdownSettingsSection: View {
     var body: some View {
         Section("Date & Time") {
             DatePicker(
-                "Date & Time",
+                "Date",
                 selection: $countdownDate,
                 in: Date.now...,
-                displayedComponents: [.date, .hourAndMinute],
+                displayedComponents: [.date],
             )
-            .datePickerStyle(.graphical)
+            .datePickerStyle(.compact)
+            .disabled(isDateEditingDisabled)
+            
+            DatePicker(
+                "Time",
+                selection: $countdownDate,
+                in: Date.now...,
+                displayedComponents: [.hourAndMinute],
+            )
+            .datePickerStyle(.automatic)
             .disabled(isDateEditingDisabled)
 
 //            VStack(alignment: .leading, spacing: 10) {
@@ -242,7 +259,7 @@ struct AddCountdownView: View {
     private let countdownToEdit: CountdownItem?
 
     @State private var iconName: String
-    @State private var color: CountdownEventColor
+    @State private var color: CountdownEventColor = CountdownEventColor.allCases.randomElement()!
     @State private var name: String
     @State private var countdownDate: Date
     @State private var countSinceDate: Date
@@ -317,15 +334,9 @@ struct AddCountdownView: View {
             Form {
 //                CountdownPreviewSection(iconName: iconName, color: color)
 
-                Section("Countdown Name") {
+                Section("Name") {
                     TextField("Graduation, Anniversary, etc.", text: $name)
                 }
-
-                AppearanceSection(
-                    color: $color,
-                    iconName: iconName,
-                    onChooseIcon: presentIconPicker
-                )
 
                 if let linkedEvent {
                     LinkedCalendarEventSection(
@@ -334,10 +345,16 @@ struct AddCountdownView: View {
                     )
                 }
 
-                CountdownSettingsSection(
+                CountdownDateTimeSection(
                     countdownDate: $countdownDate,
                     countSinceDate: $countSinceDate,
                     isDateEditingDisabled: isDateEditingDisabled
+                )
+                
+                AppearanceSection(
+                    color: $color,
+                    iconName: iconName,
+                    onChooseIcon: presentIconPicker
                 )
 
             }
